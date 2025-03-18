@@ -78,5 +78,11 @@ namespace BTL_WEBNC.Repositories
                 })
                 .ToList();
         }
+
+        // Hàm lấy chi tiết sản phẩm
+        public async Task<Product?> GetProductByIdAsync(int id)
+        {
+            return await _context.Products.FirstOrDefaultAsync(p => p.Product_Id == id);
+        }
     }
 }

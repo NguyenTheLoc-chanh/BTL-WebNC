@@ -12,5 +12,8 @@ namespace BTL_WEBNC.Repositories
         Task<List<Product>> GetProductsByCategoryAsync(int categoryId);
         List<Product> GetProductsByPriceAsync(string order);
         List<Product> SearchProductsAsync(string keyword);
+
+        //Lấy ra chi tiết sản phẩm
+        Task<Product?> GetProductByIdAsync(int id);
     }
 }

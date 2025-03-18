@@ -85,4 +85,27 @@ public class HomeController : Controller
             currentPage
         });
     }
+
+    [HttpGet("Home/ProductDetail/{productId:int}")]
+    [HttpGet("Home/ProductDetail")]
+    public async Task<IActionResult> ProductDetail(int productId)
+    {
+        Console.WriteLine($"📌 Nhận request với productId = {productId}");
+        try
+        {
+            var product = await _homeService.GetProductByIdAsync(productId);
+            if (product == null)
+            {
+                Console.WriteLine($"⚠ Không tìm thấy sản phẩm với ID = {productId}");
+                return NotFound("Sản phẩm không tồn tại.");
+            }
+            Console.WriteLine($"✅ Đã tìm thấy sản phẩm: {product.Name}");
+            return View(product);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Lỗi xảy ra: {ex.Message}");
+            return StatusCode(500, "Lỗi hệ thống, vui lòng thử lại sau!");
+        }
+    }
 }

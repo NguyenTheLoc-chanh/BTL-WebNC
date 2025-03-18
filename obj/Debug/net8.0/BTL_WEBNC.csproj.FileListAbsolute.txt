@@ -292,3 +292,6 @@ F:\Fileword\CNPM\BTL_WEBNC\obj\Debug\net8.0\refint\BTL_WEBNC.dll
 F:\Fileword\CNPM\BTL_WEBNC\obj\Debug\net8.0\BTL_WEBNC.pdb
 F:\Fileword\CNPM\BTL_WEBNC\obj\Debug\net8.0\BTL_WEBNC.genruntimeconfig.cache
 F:\Fileword\CNPM\BTL_WEBNC\obj\Debug\net8.0\ref\BTL_WEBNC.dll
+F:\Fileword\CNPM\BTL_WEBNC\obj\Debug\net8.0\BTL_WEBNC.sourcelink.json
+F:\Fileword\CNPM\BTL_WEBNC\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.UI.dll
+F:\Fileword\CNPM\BTL_WEBNC\obj\Debug\net8.0\BTL_WEBNC.MvcApplicationPartsAssemblyInfo.cs

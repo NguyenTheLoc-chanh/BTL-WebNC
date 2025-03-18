@@ -10,5 +10,7 @@ namespace BTL_WEBNC.Services
         Task<List<Product>> GetProductsByCategoryAsync(int categoryId);
         List<Product> GetProductsByPriceAsync(string order);
         List<Product> SearchProductsAsync(string keyword);
+
+        Task<Product?> GetProductByIdAsync(int productId);
     }
 }

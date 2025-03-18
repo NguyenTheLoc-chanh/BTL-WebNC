@@ -1,0 +1,18 @@
+@model BTL_WEBNC.Models.Product
+
+@{
+    ViewData["Title"] = "Chi Tiết Sản Phẩm";
+}
+@if (Model == null)
+{
+    <h2>Sản phẩm không tồn tại.</h2>
+}else{
+    <div class="container mt-4">
+    <div class="row">
+        <!-- Hình ảnh sản phẩm -->
+        <div class="col-md-6 text-center">
+            @Model.Name
+        </div>
+    </div>
+</div>
+}

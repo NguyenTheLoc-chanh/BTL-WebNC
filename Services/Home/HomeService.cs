@@ -45,5 +45,10 @@ namespace BTL_WEBNC.Services
         {
             return _homeRepository.SearchProductsAsync(keyword);
         }
+
+        public Task<Product?> GetProductByIdAsync(int productId)
+        {
+            return _homeRepository.GetProductByIdAsync(productId);
+        }
     }
 }
