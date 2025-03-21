@@ -54,5 +54,6 @@ namespace BTL_WEBNC.Models
         // Thiết lập quan hệ với Category
         [ForeignKey("category_id")]
         public virtual Category Category { get; set; }
+        public virtual ICollection<ProductSize> ProductSizes { get; set; } = new List<ProductSize>();
     }
 }

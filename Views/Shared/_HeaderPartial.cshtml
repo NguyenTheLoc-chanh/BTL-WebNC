@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 data.forEach(product => {
                     let productHTML = `
                         <div class="product-card">
-                            <a class="home-product-item" href="#">
+                            <a class="home-product-item" href="/Home/ProductDetail?productId=${product.product_Id}">
                                 <div class="home-product-item__img" style="background-image: url(${product.images});"></div>
                                 <h4 class="home-product-item__name">${product.name}</h4>
                                 <div class="home-product-item__price">

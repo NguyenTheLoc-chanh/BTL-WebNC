@@ -19,10 +19,16 @@ public class HomeController : Controller
         _context = context;
     }
 
-    public async Task<IActionResult> Index()
+    [HttpGet]
+    public async Task<IActionResult> Index(int? categoryId)
     {
         var CategoryList = await _context.Categories.ToListAsync(); 
-        var ProductList = await _homeService.GetAllProductsAsync();
+        List<Product> ProductList;
+        if(categoryId.HasValue){
+            ProductList = await _homeService.GetProductsByCategoryAsync(categoryId.Value);
+        }else{
+            ProductList = await _homeService.GetAllProductsAsync();
+        }
         
         var model = new HomeViewModel
         {
@@ -90,17 +96,24 @@ public class HomeController : Controller
     [HttpGet("Home/ProductDetail")]
     public async Task<IActionResult> ProductDetail(int productId)
     {
-        Console.WriteLine($"📌 Nhận request với productId = {productId}");
         try
         {
             var product = await _homeService.GetProductByIdAsync(productId);
+
             if (product == null)
             {
-                Console.WriteLine($"⚠ Không tìm thấy sản phẩm với ID = {productId}");
+                Console.WriteLine($"Không tìm thấy sản phẩm với ID = {productId}");
                 return NotFound("Sản phẩm không tồn tại.");
             }
-            Console.WriteLine($"✅ Đã tìm thấy sản phẩm: {product.Name}");
-            return View(product);
+            var size = await _homeService.GetSizesByProductIdAsync(productId);
+            var productSeller = await _homeService.GetProductBySelerIdAsync(product.seller_Id, product.Name);
+            var model = new ProductSizeModel
+            {
+                Sizes = size,
+                Product = product,
+                ProductSeller = productSeller
+            };
+            return View(model);
         }
         catch (Exception ex)
         {

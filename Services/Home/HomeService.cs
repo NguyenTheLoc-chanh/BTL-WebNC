@@ -1,4 +1,5 @@
 using BTL_WEBNC.Models;
+using BTL_WEBNC.Models.ViewModels;
 using BTL_WEBNC.Repositories;
 
 namespace BTL_WEBNC.Services
@@ -49,6 +50,16 @@ namespace BTL_WEBNC.Services
         public Task<Product?> GetProductByIdAsync(int productId)
         {
             return _homeRepository.GetProductByIdAsync(productId);
+        }
+
+        public Task<List<ProductSizeViewModel>> GetSizesByProductIdAsync(int productId)
+        {
+            return _homeRepository.GetSizesByProductIdAsync(productId);
+        }
+
+        public Task<List<Product>> GetProductBySelerIdAsync(int sellerID, string keywords)
+        {
+            return _homeRepository.GetProductBySelerIdAsync(sellerID, keywords);
         }
     }
 }

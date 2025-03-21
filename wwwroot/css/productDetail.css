@@ -1,0 +1,65 @@
+.btn__addCart{
+    border: 1px solid var(--primary-color);
+    background-color: #ffeee8;
+    color: var(--primary-color);
+}
+.btn__addBuy{
+    background-color: var(--primary-color);
+    color: var(--white-color);
+}
+
+.btn__addBuy:hover{
+    color: var(--white-color) !important;
+    background-color: rgba(245, 62, 45, 0.9) !important;
+}
+
+.size-option {
+    border: 1px solid gray;  
+    color: black; 
+    background-color: white;
+    transition: all 0.3s ease;
+}
+
+.size-option:hover {
+    border-color: var(--primary-color);  
+    color: var(--primary-color);  
+    background-color: var(--white-color);
+}
+
+.size-option.active {
+    border-color: var(--primary-color) !important;  
+    color: var(--primary-color) !important;  
+    background-color: var(--white-color);
+}
+.size-option:focus,
+.size-option:active {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.btn-decrease:hover,
+.btn-increase:hover,
+.btn-decrease:active,
+.btn-increase:active,
+.btn-decrease:focus,
+.btn-increase:focus {
+    background-color: var(--white-color) !important;
+    border-color: var(--border-color) !important;
+    color: black;
+    box-shadow: none !important;
+}
+.btn-decrease,
+.btn-increase{
+    border-color: var(--border-color);
+    color: black;
+}
+
+.btn-decrease:not(:disabled) + .quantity-display,
+.btn-increase:not(:disabled) + .quantity-display {
+    color: var(--primary-color);
+}
+
+.quantity-display{
+    color: black;
+    border-color: var(--border-color);
+}

@@ -9,6 +9,10 @@
       "PackagePath": "staticwebassets\\css\\home.css"
     },
     {
+      "Id": "F:\\Fileword\\CNPM\\BTL_WEBNC\\wwwroot\\css\\productDetail.css",
+      "PackagePath": "staticwebassets\\css\\productDetail.css"
+    },
+    {
       "Id": "F:\\Fileword\\CNPM\\BTL_WEBNC\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },

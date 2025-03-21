@@ -1,4 +1,5 @@
 using BTL_WEBNC.Models;
+using BTL_WEBNC.Models.ViewModels;
 
 namespace BTL_WEBNC.Repositories
 {
@@ -15,5 +16,7 @@ namespace BTL_WEBNC.Repositories
 
         //Lấy ra chi tiết sản phẩm
         Task<Product?> GetProductByIdAsync(int id);
+        Task<List<ProductSizeViewModel>> GetSizesByProductIdAsync(int productId);
+        Task<List<Product>> GetProductBySelerIdAsync(int sellerID, string keywords);
     }
 }

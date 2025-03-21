@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "Agaqw0iu6Rzxtos4YQxT/pPhEn1Gp2ktRKdG6VppYiE=",
+  "Hash": "jK830qEBr3RFlfB/+foecCYITS9YNITWWo++NC+1au4=",
   "Source": "BTL_WEBNC",
   "BasePath": "_content/BTL_WEBNC",
   "Mode": "Default",
@@ -1212,6 +1212,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\home.css"
+    },
+    {
+      "Identity": "F:\\Fileword\\CNPM\\BTL_WEBNC\\wwwroot\\css\\productDetail.css",
+      "SourceId": "BTL_WEBNC",
+      "SourceType": "Discovered",
+      "ContentRoot": "F:\\Fileword\\CNPM\\BTL_WEBNC\\wwwroot\\",
+      "BasePath": "_content/BTL_WEBNC",
+      "RelativePath": "css/productDetail.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\productDetail.css"
     },
     {
       "Identity": "F:\\Fileword\\CNPM\\BTL_WEBNC\\wwwroot\\css\\site.css",

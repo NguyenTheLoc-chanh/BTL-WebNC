@@ -1,4 +1,5 @@
 using BTL_WEBNC.Models;
+using BTL_WEBNC.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace BTL_WEBNC.Repositories
@@ -82,7 +83,37 @@ namespace BTL_WEBNC.Repositories
         // Hàm lấy chi tiết sản phẩm
         public async Task<Product?> GetProductByIdAsync(int id)
         {
-            return await _context.Products.FirstOrDefaultAsync(p => p.Product_Id == id);
+            var product = await _context.Products
+                .Include(p => p.Category)
+                .FirstOrDefaultAsync(p => p.Product_Id == id);
+            if (product == null)
+            {
+                Console.WriteLine($"Không tìm thấy sản phẩm với ID = {id}");
+            }
+            return product;
+        }
+
+        public async Task<List<ProductSizeViewModel>> GetSizesByProductIdAsync(int productId)
+        {
+            return await _context.ProductSizes
+                .Where(ps => ps.Product_Id == productId)
+                .Select(ps => new ProductSizeViewModel
+                {
+                    Size_Id = ps.Size.Size_Id,
+                    Name = ps.Size.Name,
+                    Stock = ps.Stock
+                })
+                .ToListAsync();
+        }
+
+        public async Task<List<Product>> GetProductBySelerIdAsync(int sellerID, string keywords)
+        {
+             var keywordList = keywords.Split(' ');
+            return await _context.Products
+                .Where(p => p.seller_Id == sellerID && keywordList.Any(k => p.Name.Contains(k)))
+                .OrderByDescending(p => p.CreatedAt)
+                .Take(5)
+                .ToListAsync(); 
         }
     }
 }

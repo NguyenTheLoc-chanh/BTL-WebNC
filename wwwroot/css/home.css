@@ -600,3 +600,9 @@ i.home-product-item__like-icon-fill{
     color: #737373 !important; /* Giữ nguyên màu khi hover */
     text-decoration: none; /* Loại bỏ gạch chân nếu có */
 }
+
+
+/* Product Details */
+.ct-category-details{
+  color: #05a;
+}
