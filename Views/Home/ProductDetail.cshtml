@@ -75,6 +75,29 @@
                 </div>
             </div>
         </div>
+        <!-- Thông tin Shop -->
+        <div class="shop-info-container d-flex align-items-center bg-white p-3 rounded shadow-sm mt-4">
+            <!-- Logo Shop -->
+            <div class="shop-logo me-3">
+                <img src="@Model.Sellers.StoreLogo" alt="Logo shop" class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;">
+            </div>
+            
+            <!-- Thông tin Shop -->
+            <div class="shop-details">
+                <h5 class="fw-bold mb-1">@Model.Sellers.StoreName</h5>
+                <p class="text-muted mb-1">Người theo dõi: <span class="fw-medium">10</span></p>
+                
+                <div class="d-flex align-items-center">
+                    <a asp-action="ShopDetail" asp-controller="Shop" asp-route-shopId="@Model.Sellers.seller_Id" 
+                        class="btn btn-outline-primary btn-sm me-2">
+                        <i class="fas fa-store"></i> Vào Shop
+                    </a>
+                    <button class="btn btn-danger btn-sm follow-btn">
+                        <i class="fas fa-plus"></i> Theo dõi
+                    </button>
+                </div>
+            </div>
+        </div>
 
         <!-- Mô tả sản phẩm -->
         <div class="row mt-5">

@@ -12,6 +12,8 @@ namespace BTL_WEBNC.Models.ViewModels
         public Product Product { get; set; }
 
         public List<Product> ProductSeller { get; set; }
+
+        public Seller Sellers { get; set; }
     }
 
     public class ProductSizeViewModel

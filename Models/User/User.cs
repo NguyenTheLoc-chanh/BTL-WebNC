@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
 namespace BTL_WEBNC.Models
 {
@@ -10,7 +11,7 @@ namespace BTL_WEBNC.Models
         Admin
     }
     [Table("Users")]
-    public class User
+    public class User : IdentityUser
     {
         [Key]
         public int user_Id { get; set; }

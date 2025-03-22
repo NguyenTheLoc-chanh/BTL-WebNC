@@ -85,6 +85,7 @@ namespace BTL_WEBNC.Repositories
         {
             var product = await _context.Products
                 .Include(p => p.Category)
+                .Include(p => p.Seller)
                 .FirstOrDefaultAsync(p => p.Product_Id == id);
             if (product == null)
             {
@@ -108,12 +109,19 @@ namespace BTL_WEBNC.Repositories
 
         public async Task<List<Product>> GetProductBySelerIdAsync(int sellerID, string keywords)
         {
-             var keywordList = keywords.Split(' ');
+            var keywordList = keywords.Split(' ');
             return await _context.Products
                 .Where(p => p.seller_Id == sellerID && keywordList.Any(k => p.Name.Contains(k)))
                 .OrderByDescending(p => p.CreatedAt)
                 .Take(5)
                 .ToListAsync(); 
+        }
+
+        public async Task<Seller?> GetSellerByIDAsync(int seller_Id)
+        {
+            return await _context.Sellers
+                .Where(s => s.seller_Id == seller_Id)
+                .FirstOrDefaultAsync();
         }
     }
 }

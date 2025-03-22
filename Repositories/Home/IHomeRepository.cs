@@ -18,5 +18,7 @@ namespace BTL_WEBNC.Repositories
         Task<Product?> GetProductByIdAsync(int id);
         Task<List<ProductSizeViewModel>> GetSizesByProductIdAsync(int productId);
         Task<List<Product>> GetProductBySelerIdAsync(int sellerID, string keywords);
+
+        Task<Seller> GetSellerByIDAsync(int seller_Id);
     }
 }

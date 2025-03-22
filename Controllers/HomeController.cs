@@ -107,11 +107,17 @@ public class HomeController : Controller
             }
             var size = await _homeService.GetSizesByProductIdAsync(productId);
             var productSeller = await _homeService.GetProductBySelerIdAsync(product.seller_Id, product.Name);
+            var shop = await _homeService.GetSellerByIDAsync(product.seller_Id);
+            if (shop == null)
+            {
+                return NotFound();
+            }
             var model = new ProductSizeModel
             {
                 Sizes = size,
                 Product = product,
-                ProductSeller = productSeller
+                ProductSeller = productSeller,
+                Sellers = shop
             };
             return View(model);
         }
