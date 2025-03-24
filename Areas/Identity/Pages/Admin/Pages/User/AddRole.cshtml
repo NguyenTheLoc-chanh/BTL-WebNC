@@ -1,0 +1,30 @@
+@page "/admin/assign-user-role/{id}"
+@model BTL_WEBNC.Admin.Users.AddRoleModel
+@{
+    ViewData["Title"] = "Thiết lập Role cho người dùng";
+}
+
+<h3>Thiết lập role cho thành viên: @Model.user.UserName</h3>
+<partial name="_StatusMessage" for="StatusMessage" />
+
+<div class="row">
+    <div class="col-md-6">
+        <form id="set-password-form" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="form-floating mb-3">
+                <label asp-for="RoleNames" class="form-label"></label>
+                @Html.ListBoxFor(m => m.RoleNames, @Model.allRoles, new {
+                    id = "id-select-role",
+                    @class = "form-control"
+                })
+                <span asp-validation-for="RoleNames" class="text-danger"></span>
+            </div>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Cập nhật</button>
+            <a asp-page="./Index" class="w-100 btn btn-lg btn-primary">Đến trang danh sách</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

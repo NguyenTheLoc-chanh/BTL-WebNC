@@ -295,3 +295,11 @@ F:\Fileword\CNPM\BTL_WEBNC\obj\Debug\net8.0\ref\BTL_WEBNC.dll
 F:\Fileword\CNPM\BTL_WEBNC\obj\Debug\net8.0\BTL_WEBNC.sourcelink.json
 F:\Fileword\CNPM\BTL_WEBNC\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.UI.dll
 F:\Fileword\CNPM\BTL_WEBNC\obj\Debug\net8.0\BTL_WEBNC.MvcApplicationPartsAssemblyInfo.cs
+F:\Fileword\CNPM\BTL_WEBNC\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+F:\Fileword\CNPM\BTL_WEBNC\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+F:\Fileword\CNPM\BTL_WEBNC\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+F:\Fileword\CNPM\BTL_WEBNC\bin\Debug\net8.0\Microsoft.Extensions.Identity.Core.dll
+F:\Fileword\CNPM\BTL_WEBNC\bin\Debug\net8.0\Microsoft.Extensions.Identity.Stores.dll
+F:\Fileword\CNPM\BTL_WEBNC\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+F:\Fileword\CNPM\BTL_WEBNC\bin\Debug\net8.0\MailKit.dll
+F:\Fileword\CNPM\BTL_WEBNC\bin\Debug\net8.0\MimeKit.dll

@@ -1,0 +1,47 @@
+@page "/admin/members"
+@model BTL_WEBNC.Admin.Users.IndexModel
+
+@{
+    ViewData["Title"] = "Danh sách người dùng";
+}
+
+<partial name="_StatusMessage" model="@Model.StatusMessage" />
+<div class="container mt-4">
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th class="text-center">Tên người dùng</th>
+                    <th class="text-center">Tên role (Vai trò)</th>
+                    <th class="text-center">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.users)
+                {
+                    <tr>
+                        <td class="text-center">@user.UserName</td>
+                        <td>
+                            @if(string.IsNullOrEmpty(user.RoleNames)){
+                                <a class="text-dark" asp-page="./AddRole" asp-route-id="@user.Id">
+                                    + Thêm Role
+                                </a>
+                            }else{
+                                <a asp-page="./AddRole" asp-route-id="@user.Id">
+                                    @user.RoleNames
+                                </a>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center gap-1">
+                                <a class="btn btn-warning btn-sm px-2 py-1 d-inline-block" asp-page="./SetPassword" asp-route-id="@user.Id">
+                                    Xét mật khẩu
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

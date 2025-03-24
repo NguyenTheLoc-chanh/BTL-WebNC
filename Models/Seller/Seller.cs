@@ -17,7 +17,7 @@ namespace BTL_WEBNC.Models
         public int seller_Id { get; set; }
 
         [Required]
-        public int user_Id { get; set; }
+        public string user_Id { get; set; }
 
         [Required(ErrorMessage ="Tên cửa hàng không được để trống!")]
         [StringLength(255)]

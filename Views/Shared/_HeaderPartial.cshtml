@@ -1,3 +1,9 @@
+@using Microsoft.AspNetCore.Identity
+@using BTL_WEBNC.Models
+
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
 <header class="custom-bg text-white">
         <div class="container py-2">
             <nav class="ct-mobile d-flex justify-content-between align-items-center">
@@ -18,24 +24,31 @@
                     <div class="d-none d-md-flex me-3">
                         <a href="#" class="text-white text-decoration-none"><i class="far fa-question-circle"></i> Trợ giúp</a>
                     </div>
-                    @* <div class="dropdown">
-                        <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <img src="https://graph.facebook.com/1036060760144432/picture?width=40&height=40" class="rounded-circle" width="30" height="30">
-                            Nguyễn Lộc
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Tài khoản của tôi</a></li>
-                            <li><a class="dropdown-item" href="#">Địa chỉ của tôi</a></li>
-                            <li><a class="dropdown-item" href="#">Đơn mua</a></li>
-                            <li><a class="dropdown-item text-danger" href="#">Đăng xuất</a></li>
-                        </ul>
-                    </div> *@
-                    <div class="me-3">
-                        <a href="#" class="text-white text-decoration-none">Đăng kí</a>
-                    </div>
-                    <div class="me-3">
-                        <a href="#" class="text-white text-decoration-none">Đăng nhập</a>
-                    </div>
+                    @if(SignInManager.IsSignedIn(User)){
+                        <div class="dropdown">
+                            <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <img src="https://graph.facebook.com/1036060760144432/picture?width=40&height=40" class="rounded-circle" width="30" height="30">
+                                @UserManager.GetUserName(User)
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Tài khoản của tôi</a></li>
+                                <li><a class="dropdown-item" href="#">Địa chỉ của tôi</a></li>
+                                <li><a class="dropdown-item" href="#">Đơn mua</a></li>
+                                <li>
+                                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                                        <button type="submit" class="dropdown-item text-danger">Đăng xuất</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    }else{
+                        <div class="me-3">
+                            <a class="text-white text-decoration-none" asp-area="Identity" asp-page="/Account/Register">Đăng kí</a>
+                        </div>
+                        <div class="me-3">
+                            <a class="text-white text-decoration-none" asp-area="Identity" asp-page="/Account/Login">Đăng nhập</a>
+                        </div>
+                    }
                 </div>
             </nav>
         </div>

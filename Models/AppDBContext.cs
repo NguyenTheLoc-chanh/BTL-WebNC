@@ -1,8 +1,9 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BTL_WEBNC.Models 
 {
-    public class AppDBContext : DbContext
+    public class AppDBContext : IdentityDbContext<User>
     {
         public AppDBContext(DbContextOptions<AppDBContext> options) : base(options)
         {
@@ -17,14 +18,14 @@ namespace BTL_WEBNC.Models
         {
             base.OnModelCreating(modelBuilder);
             // Code tích hợp Identity
-            // foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-            // {
-            //     var tableName = entityType.GetTableName();
-            //     if (tableName.StartsWith("AspNet"))
-            //     {
-            //         entityType.SetTableName(tableName.Substring(6));
-            //     }
-            // }
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                var tableName = entityType.GetTableName();
+                if (tableName.StartsWith("AspNet"))
+                {
+                    entityType.SetTableName(tableName.Substring(6));
+                }
+            }
 
         }
         // Ví dụ khai báo
