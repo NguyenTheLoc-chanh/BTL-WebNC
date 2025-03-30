@@ -61,6 +61,8 @@ builder.Services.ConfigureApplicationCookie(options => {
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IHomeRepository, HomeRepository>();
 builder.Services.AddScoped<IHomeService, HomeService>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddSingleton<IdentityErrorDescriber, AppIdentityErrorDes>();
 builder.Services.AddRazorPages();
 

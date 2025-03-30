@@ -36,5 +36,8 @@ namespace BTL_WEBNC.Models
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductSize>  ProductSizes{ get; set; }
         public DbSet<Size> Sizes { get; set; }
+        public DbSet<CartModel> Carts { get; set; }
+        public DbSet<CartDetails> CartDetails { get; set; }
+
     }
 }

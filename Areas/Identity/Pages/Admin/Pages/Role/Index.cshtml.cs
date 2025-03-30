@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BTL_WEBNC.Admin.Roles
 {
-    [Authorize(Roles ="Admin")]
+    // [Authorize(Roles ="Admin")]
     public class IndexModel : RolePageModel
     {
         public IndexModel(RoleManager<IdentityRole> roleManager, AppDBContext appDBContext) : base(roleManager, appDBContext)

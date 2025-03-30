@@ -17,7 +17,7 @@ namespace BTL_WEBNC.Models
         public int Product_Id { get; set; }
 
         [Required]
-        public int seller_Id { get; set; }
+        public string seller_Id { get; set; }
 
         [Required]
         public int category_id { get; set; }
@@ -49,6 +49,7 @@ namespace BTL_WEBNC.Models
         
         // Thiết lập quan hệ với Seller
         [ForeignKey("seller_Id")]
+        [Column(TypeName = "nvarchar(50)")]
         public virtual Seller Seller { get; set; }
 
         // Thiết lập quan hệ với Category

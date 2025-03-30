@@ -1,4 +1,8 @@
+@using Microsoft.AspNetCore.Identity
 @model BTL_WEBNC.Models.ViewModels.ProductSizeModel
+
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
 
 @{
     ViewData["Title"] = Model?.Product.Name ?? "Chi tiết sản phẩm";
@@ -9,7 +13,7 @@
 }else{
 <div>
     <div class="container-fluid">
-        <div class="d-flex align-items-center gap-2 mt-4 ">
+        <div class="align-items-center gap-2 mt-4 ">
             <a href="/" class="ct-category-details text-decoration-none fw-medium">Shopee</a>
             <img src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/productdetailspage/dd5cbafaee315c6c99f4.svg" alt="icon arrow right" class="img-fluid" style="width: 10px;">
             <a asp-controller="Home" asp-action="Index" asp-route-categoryId="@Model.Product.Category.category_id"
@@ -31,7 +35,7 @@
                 <h2 class="fw-bold">@Model.Product.Name</h2>
                 
                 <!-- Đánh giá và lượt mua -->
-                <div class="d-flex align-items-center">
+                <div class="d-flex justify-content-start align-items-center">
                     <span class="me-2 text-warning">
                         ★★★★☆ (4.8)
                     </span>
@@ -47,7 +51,7 @@
                 <!-- Chọn Size -->
                 <div class="mt-3">
                     <label class="fw-bold mb-2">Kích cỡ</label>
-                    <div class="d-flex flex-wrap">
+                    <div class="d-flex justify-content-start flex-wrap">
                         @foreach (var size in Model.Sizes)
                         {
                             <button class="btn btn-outline-primary m-1 size-option" data-size="@size.Size_Id" data-stock="@size.Stock">@size.Name</button>
@@ -59,24 +63,24 @@
                 <!-- Chọn số lượng -->
                 <div class="mt- mb-5">
                     <label class="fw-bold mb-2">Số lượng:</label>
-                    <div class="d-flex">
+                    <div class="d-flex justify-content-start">
                         <button class="btn btn-outline-secondary btn-decrease" disabled>-</button>
                         <span class="form-control text-center mx-2 quantity-display" style="width: 50px;">1</span>
                         <button class="btn btn-outline-secondary btn-increase" disabled>+</button>
                     </div>
                 </div>
-
+                <div id="error-message" class="text-danger mt-2" style="display: none;"></div>
                 <!-- Nút mua hàng -->
-                <div class="mt-4">
-                    <button class="btn__addCart btn btn-lg px-4 me-4">
+                <div class="d-flex justify-content-start mt-4">
+                    <button class="btn__addCart btn btn-lg px-4 me-4" data-id="@Model.Product.Product_Id" data-userID="@UserManager.GetUserId(User)" onclick="checkLogin(event, 'cart')">
                         <i class="fas fa-cart-plus"></i> Thêm vào giỏ hàng
                     </button>
-                    <button class="btn__addBuy btn btn-lg px-5 me-3">Mua ngay</button>
+                    <button class="btn__addBuy btn btn-lg px-5 me-3" onclick="checkLogin(event, 'buy')">Mua ngay</button>
                 </div>
             </div>
         </div>
         <!-- Thông tin Shop -->
-        <div class="shop-info-container d-flex align-items-center bg-white p-3 rounded shadow-sm mt-4">
+        <div class="shop-info-container d-flex justify-content-start align-items-center bg-white p-3 rounded shadow-sm mt-4">
             <!-- Logo Shop -->
             <div class="shop-logo me-3">
                 <img src="@Model.Sellers.StoreLogo" alt="Logo shop" class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;">
@@ -161,64 +165,140 @@
             </div>
         </div>
     </div>
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050">
+        <div id="cartToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-check-circle"></i> Thêm vào giỏ hàng thành công!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
 </div>
+@section Scripts
+{
+    <script>
+        let quantityDisplay;
+        document.addEventListener("DOMContentLoaded", function () {
+        const sizeButtons = document.querySelectorAll(".size-option");
+        const stockInfo = document.getElementById("stock-info");
+        const decreaseBtn = document.querySelector(".btn-decrease");
+        const increaseBtn = document.querySelector(".btn-increase");
+        quantityDisplay = document.querySelector(".quantity-display");
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-    const sizeButtons = document.querySelectorAll(".size-option");
-    const stockInfo = document.getElementById("stock-info");
-    const decreaseBtn = document.querySelector(".btn-decrease");
-    const increaseBtn = document.querySelector(".btn-increase");
-    const quantityDisplay = document.querySelector(".quantity-display");
+        let currentQuantity = 1;
+        let stock = 0;
 
-    let currentQuantity = 1;
-    let stock = 0;
+        function disableButtons() {
+            decreaseBtn.setAttribute("disabled", "true");
+            increaseBtn.setAttribute("disabled", "true");
+        }
+        disableButtons();
 
-    function disableButtons() {
-        decreaseBtn.setAttribute("disabled", "true");
-        increaseBtn.setAttribute("disabled", "true");
-    }
-    disableButtons();
+        sizeButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                // Bỏ chọn tất cả các nút
+                sizeButtons.forEach(btn => btn.classList.remove("active"));
+                
+                // Đánh dấu nút đang chọn
+                this.classList.add("active");
+                selectedSize = this.getAttribute("data-size");
+                errorDiv.style.display = "none";
 
-    sizeButtons.forEach(button => {
-        button.addEventListener("click", function () {
-            // Bỏ chọn tất cả các nút
-            sizeButtons.forEach(btn => btn.classList.remove("active"));
-            
-            // Đánh dấu nút đang chọn
-            this.classList.add("active");
+                stock = parseInt(this.getAttribute("data-stock"));
+                stockInfo.textContent = `Kho còn: ${stock} sản phẩm.`;
 
-            stock = parseInt(this.getAttribute("data-stock"));
-            stockInfo.textContent = `Kho còn: ${stock} sản phẩm.`;
+                currentQuantity = 1;
+                quantityDisplay.textContent = currentQuantity;
+                // Nếu size có hàng thì bật nút tăng/giảm
+                if (stock > 0) {
+                    decreaseBtn.removeAttribute("disabled");
+                    increaseBtn.removeAttribute("disabled");
+                } else {
+                    disableButtons();
+                }
+            });
+        });
 
-            currentQuantity = 1;
-            quantityDisplay.textContent = currentQuantity;
-            // Nếu size có hàng thì bật nút tăng/giảm
-            if (stock > 0) {
-                decreaseBtn.removeAttribute("disabled");
-                increaseBtn.removeAttribute("disabled");
-            } else {
-                disableButtons();
+        // Xử lý giảm số lượng
+        decreaseBtn.addEventListener("click", function () {
+            if (currentQuantity > 1) {
+                currentQuantity--;
+                quantityDisplay.textContent = currentQuantity;
+            }
+        });
+        // Xử lý tăng số lượng
+        increaseBtn.addEventListener("click", function () {
+            if (currentQuantity < stock) {
+                currentQuantity++;
+                quantityDisplay.textContent = currentQuantity;
             }
         });
     });
+    // Truyền giá trị đăng nhập từ server vào biến JavaScript
+    let isLoggedIn = @Json.Serialize(User.Identity.IsAuthenticated);
+    let selectedSize = null;
+    const errorDiv = document.getElementById("error-message");
 
-    // Xử lý giảm số lượng
-    decreaseBtn.addEventListener("click", function () {
-        if (currentQuantity > 1) {
-            currentQuantity--;
-            quantityDisplay.textContent = currentQuantity;
-        }
-    });
-    // Xử lý tăng số lượng
-    increaseBtn.addEventListener("click", function () {
-        if (currentQuantity < stock) {
-            currentQuantity++;
-            quantityDisplay.textContent = currentQuantity;
-        }
-    });
-});
+    let userId = document.querySelector(".btn__addCart").getAttribute("data-userID");
 
-</script>
+    function updateCartCount() {
+        $.get(`/Home/GetCartCount?userId=${encodeURIComponent(userId)}`, function (data) {
+            $("#cart-count").text(data.count);
+        }).fail(function () {
+            console.error("Không thể lấy dữ liệu giỏ hàng.");
+        });
+    }
+    function showToast() {
+        let toastEl = document.getElementById("cartToast");
+        let toast = new bootstrap.Toast(toastEl);
+        toast.show();
+    }
+
+    function checkLogin(event, actionType) {
+            event.preventDefault();
+
+            if (!isLoggedIn) {
+                window.location.href = "/login";
+                return;
+            }
+
+            if (!selectedSize) {
+                errorDiv.textContent = "Vui lòng chọn kích cỡ!";
+                errorDiv.style.display = "block";
+                return;
+            }
+            let quantityDisplay = document.querySelector(".quantity-display");
+            let productId = document.querySelector(".btn__addCart").getAttribute("data-id");
+            let userId = document.querySelector(".btn__addCart").getAttribute("data-userID");
+            let sizeId = selectedSize || 0;
+            if (actionType === "cart") {
+                $.ajax({
+                    url: '@Url.Action("AddToCart", "Home")',
+                    type: 'POST',
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        userId: userId,
+                        productId: parseInt(productId),
+                        sizeId: parseInt(selectedSize),
+                        quantity: parseInt(quantityDisplay.textContent)
+                    }),
+                    success: function (response) {
+                        updateCartCount(); // Cập nhật số lượng giỏ hàng
+                        showToast();
+                    },
+                    error: function () {
+                        alert("Có lỗi xảy ra khi thêm vào giỏ hàng!\nChi tiết: ");
+                    }
+                });
+            } else if (actionType === "buy") {
+                alert("Chuyển đến trang thanh toán!");
+                // Chuyển hướng đến trang thanh toán
+                window.location.href = "/Checkout";
+            }
+        }
+    </script>
+}
 }
 

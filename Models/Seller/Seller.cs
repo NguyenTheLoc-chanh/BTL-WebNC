@@ -14,7 +14,9 @@ namespace BTL_WEBNC.Models
     public class Seller
     {
         [Key]
-        public int seller_Id { get; set; }
+        [Required(ErrorMessage = "Mã người bán không được để trống!")]
+        [Column(TypeName = "nvarchar(50)")]
+        public string seller_Id { get; set; } = Guid.NewGuid().ToString();
 
         [Required]
         public string user_Id { get; set; }

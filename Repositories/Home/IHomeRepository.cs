@@ -17,8 +17,9 @@ namespace BTL_WEBNC.Repositories
         //Lấy ra chi tiết sản phẩm
         Task<Product?> GetProductByIdAsync(int id);
         Task<List<ProductSizeViewModel>> GetSizesByProductIdAsync(int productId);
-        Task<List<Product>> GetProductBySelerIdAsync(int sellerID, string keywords);
+        Task<List<Product>> GetProductBySelerIdAsync(string sellerID, string keywords);
 
-        Task<Seller?> GetSellerByIDAsync(int seller_Id);
+        Task<Seller?> GetSellerByIDAsync(string seller_Id);
+        
     }
 }

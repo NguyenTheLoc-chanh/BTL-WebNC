@@ -11,11 +11,13 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private readonly IHomeService _homeService;
+    private readonly ICartService _cartService;
     private readonly AppDBContext _context;
-    public HomeController(ILogger<HomeController> logger, IHomeService homeService, AppDBContext context)
+    public HomeController(ILogger<HomeController> logger, IHomeService homeService,ICartService cartService, AppDBContext context)
     {
         _logger = logger;
         _homeService = homeService;
+        _cartService = cartService;
         _context = context;
     }
 
@@ -127,4 +129,27 @@ public class HomeController : Controller
             return StatusCode(500, "Lỗi hệ thống, vui lòng thử lại sau!");
         }
     }
+
+    [HttpPost("AddToCart")]
+    public async Task<IActionResult> AddToCart([FromBody] AddToCartRequest request)
+    {
+        bool success = await _cartService.AddToCartAsync(request.UserId, request.ProductId, request.SizeId, request.quantity);
+        return Json(new { success, message = "Sản phẩm đã được thêm vào giỏ hàng!" });
+    }
+
+    [HttpGet("Home/GetCartCount")]
+    public async Task<IActionResult> GetCartCount(string userId)
+    {
+        Console.WriteLine($"API nhận userId: {userId}");
+        int count = await _cartService.GetCartCountAsync(userId);
+        return Json(new { count });
+    }
+    public class AddToCartRequest
+    {
+        public string UserId { get; set; }
+        public int ProductId { get; set; }
+        public int SizeId { get; set; }
+        public int quantity { get; set; }
+    }
+
 }

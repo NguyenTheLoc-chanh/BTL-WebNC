@@ -4,6 +4,7 @@ using BTL_WEBNC.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BTL_WEBNC.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250324164018_UpdateDatabase")]
+    partial class UpdateDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,57 +24,6 @@ namespace BTL_WEBNC.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("BTL_WEBNC.Models.CartDetails", b =>
-                {
-                    b.Property<int>("CartDetailId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartDetailId"));
-
-                    b.Property<int>("CartId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Product_Id")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Size_Id")
-                        .HasColumnType("int");
-
-                    b.HasKey("CartDetailId");
-
-                    b.HasIndex("CartId");
-
-                    b.HasIndex("Product_Id");
-
-                    b.HasIndex("Size_Id");
-
-                    b.ToTable("CartDetails");
-                });
-
-            modelBuilder.Entity("BTL_WEBNC.Models.CartModel", b =>
-                {
-                    b.Property<int>("CartId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartId"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Id")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CartId");
-
-                    b.ToTable("Carts");
-                });
 
             modelBuilder.Entity("BTL_WEBNC.Models.Category", b =>
                 {
@@ -131,7 +83,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.Property<string>("seller_Id")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Product_Id");
 
@@ -171,7 +123,7 @@ namespace BTL_WEBNC.Migrations
             modelBuilder.Entity("BTL_WEBNC.Models.Seller", b =>
                 {
                     b.Property<string>("seller_Id")
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -418,33 +370,6 @@ namespace BTL_WEBNC.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("BTL_WEBNC.Models.CartDetails", b =>
-                {
-                    b.HasOne("BTL_WEBNC.Models.CartModel", "Cart")
-                        .WithMany("CartDetails")
-                        .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BTL_WEBNC.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("Product_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BTL_WEBNC.Models.Size", "Size")
-                        .WithMany()
-                        .HasForeignKey("Size_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cart");
-
-                    b.Navigation("Product");
-
-                    b.Navigation("Size");
-                });
-
             modelBuilder.Entity("BTL_WEBNC.Models.Product", b =>
                 {
                     b.HasOne("BTL_WEBNC.Models.Category", "Category")
@@ -543,11 +468,6 @@ namespace BTL_WEBNC.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("BTL_WEBNC.Models.CartModel", b =>
-                {
-                    b.Navigation("CartDetails");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.Product", b =>

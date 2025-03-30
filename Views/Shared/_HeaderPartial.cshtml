@@ -57,7 +57,7 @@
                 <label for="mobile-search-checkbox" class="header__mobile-search">
                     <i class="header__mobile-search-icon fas fa-search"></i>
                 </label>
-                <a href="#" class="header__logo-link text-white text-decoration-none">
+                <a asp-asp-controller="Home" asp-action="Index" class="header__logo-link text-white text-decoration-none">
                     <svg viewBox="0 0 192 65" class="header__logo-img">
                         <g fill-rule="evenodd">
                             <path
@@ -77,9 +77,9 @@
                     </div>
                 </div>
                 <div class="position-relative header__cart">
-                    <a href="#" class="ct__cart-mobile text-white text-decoration-none">
+                    <a href="javascript:void(0);" class="ct__cart-mobile text-white text-decoration-none">
                         <i class="fa-solid fa-cart-shopping cart-icon"></i>
-                        <span class="header__cart-notice">3</span>
+                        <span id="cart-count" data-userid="@UserManager.GetUserId(User)" class="header__cart-notice">0</span>
                     </a>
                 </div>
             </div>
@@ -91,7 +91,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById("search-input");
     const searchBtn = document.getElementById("search-btn");
     const productContainer = document.querySelector(".home-product .row");
-
     function searchProducts() {
         const keyword = searchInput.value.trim();
         if (keyword.length === 0) {
@@ -158,6 +157,21 @@ document.addEventListener("DOMContentLoaded", function () {
         if (event.key === "Enter") {
             searchProducts();
         }
+    });
+    function loadCartCount() {
+        let userIdElement = document.getElementById("cart-count");
+        let userID = userIdElement ? userIdElement.getAttribute("data-userid") : null;
+
+        console.log("ID:", userID);
+        if (!userID || userID === "null") return;
+        $.get(`/Home/GetCartCount?userId=${encodeURIComponent(userID)}`, function (data) {
+            $("#cart-count").text(data.count);
+            console.log("Số lượng:", data.count);
+        });
+    }
+    $(document).ready(function () {
+        console.log("đã load....")
+        loadCartCount(); 
     });
 });
 </script>

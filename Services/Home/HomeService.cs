@@ -57,12 +57,12 @@ namespace BTL_WEBNC.Services
             return _homeRepository.GetSizesByProductIdAsync(productId);
         }
 
-        public Task<List<Product>> GetProductBySelerIdAsync(int sellerID, string keywords)
+        public Task<List<Product>> GetProductBySelerIdAsync(string sellerID, string keywords)
         {
             return _homeRepository.GetProductBySelerIdAsync(sellerID, keywords);
         }
 
-        public Task<Seller?> GetSellerByIDAsync(int seller_Id)
+        public Task<Seller?> GetSellerByIDAsync(string seller_Id)
         {
             return _homeRepository.GetSellerByIDAsync(seller_Id);
         }

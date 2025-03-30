@@ -107,7 +107,7 @@ namespace BTL_WEBNC.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<Product>> GetProductBySelerIdAsync(int sellerID, string keywords)
+        public async Task<List<Product>> GetProductBySelerIdAsync(string sellerID, string keywords)
         {
             var keywordList = keywords.Split(' ');
             return await _context.Products
@@ -117,7 +117,7 @@ namespace BTL_WEBNC.Repositories
                 .ToListAsync(); 
         }
 
-        public async Task<Seller?> GetSellerByIDAsync(int seller_Id)
+        public async Task<Seller?> GetSellerByIDAsync(string seller_Id)
         {
             return await _context.Sellers
                 .Where(s => s.seller_Id == seller_Id)
