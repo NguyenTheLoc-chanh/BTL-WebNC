@@ -1,4 +1,5 @@
 using BTL_WEBNC.Models;
+using BTL_WEBNC.Models.ViewModels;
 using BTL_WEBNC.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -50,6 +51,16 @@ namespace BTL_WEBNC.Repositories
             return true;
         }
 
+        public async Task<bool> DecreaseQuantityAsync(int cartDetailId)
+        {
+            var cartDetail = await _context.CartDetails.FindAsync(cartDetailId);
+            if (cartDetail == null || cartDetail.Quantity <= 1) return false;
+
+            cartDetail.Quantity -= 1;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<int> GetCartCountAsync(string userId)
         {
             var cart = await _context.Carts.FirstOrDefaultAsync(c => c.Id == userId);
@@ -61,6 +72,49 @@ namespace BTL_WEBNC.Repositories
                     .Distinct()
                     .CountAsync()
                 : 0;
+        }
+        public async Task<List<CartDetailModel>> GetCartDetailsByUserId(string userId)
+        {
+            var cart = await _context.Carts.FirstOrDefaultAsync(c => c.Id == userId);
+            if (cart == null)
+            {
+                return new List<CartDetailModel>();
+            }
+
+            return await _context.CartDetails
+                        .Where(cd => cd.CartId == cart.CartId)
+                        .Select(cd => new CartDetailModel
+                        {
+                            CartDetailId = cd.CartDetailId,
+                            ProductID = cd.Product_Id,
+                            Quantity = cd.Quantity,
+                            ProductName = cd.Product.Name,
+                            ProductPrice = cd.Product.Price,
+                            ImageUrl = cd.Product.Images
+                        })
+                        .ToListAsync();
+        }
+
+        public async Task<bool> IncreaseQuantityAsync(int cartDetailId)
+        {
+            var cartDetail = await _context.CartDetails.FindAsync(cartDetailId);
+            if (cartDetail == null) return false;
+
+            cartDetail.Quantity += 1;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> RemoveFromCartAsync(int cartDetailId)
+        {
+             var cartDetail = await _context.CartDetails.FindAsync(cartDetailId);
+            if (cartDetail != null)
+            {
+                _context.CartDetails.Remove(cartDetail);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
     }
 }

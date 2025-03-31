@@ -1,0 +1,281 @@
+@using Microsoft.AspNetCore.Identity
+@model List<BTL_WEBNC.Models.ViewModels.CartDetailModel>
+
+@inject UserManager<User> UserManager
+@{
+    ViewData["Title"] = "Giỏ hàng của bạn";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-5">🛒 Giỏ hàng của bạn</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-warning">Giỏ hàng của bạn đang trống.</div>
+    }
+    else
+    {
+        <table class="table table-bordered">
+            <thead class="bg-white">
+                <tr>
+                    <th width="5%"><input type="checkbox" id="select-all"></th>
+                    <th width="40%">Sản phẩm</th>
+                    <th width="15%" class="text-center">Đơn giá</th>
+                    <th width="15%" class="text-center">Số lượng</th>
+                    <th width="15%" class="text-center">Thành tiền</th>
+                    <th width="10%" class="text-center">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <input type="checkbox" class="select-item" data-id="@item.CartDetailId" data-price="@item.ProductPrice" checked>
+                        </td>
+                        <td>
+                            <div class="d-flex">
+                                <img src="@item.ImageUrl" alt="@item.ProductName" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
+                                <div class="ms-3">
+                                    <p class="fw-bold mb-1">@item.ProductName</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-center">@item.ProductPrice.ToString("N0") đ</td>
+                        <td>
+                            <div class="d-flex justify-content-start">
+                                <button class="btn btn-outline-secondary btn-decrease" data-id="@item.CartDetailId" data-type="minus">-</button>
+                                <span class="form-control text-center mx-2 quantity-display" style="width: 50px;">@item.Quantity</span>
+                                <button class="btn btn-outline-secondary btn-increase" data-id="@item.CartDetailId" data-type="plus">+</button>
+                            </div>
+                        </td>
+                        <td class="subtotal fw-bold text-center">@((item.ProductPrice * item.Quantity).ToString("N0")) đ</td>
+                        <td>
+                            <button class="btn btn-link text-danger remove-item" data-id="@item.CartDetailId" data-userID="@UserManager.GetUserId(User)">Xóa</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+
+        <div class="d-flex justify-content-between align-items-center">
+            <button class="btn btn-danger btn-sm" id="remove-selected">🗑 Xóa mục đã chọn</button>
+            <h4 class="fw-bold">Tổng tiền: <span id="total-price" class="text-danger">0 đ</span></h4>
+            <button class="btn btn-success" id="checkout-btn" disabled>💳 Thanh toán ngay</button>
+        </div>
+    }
+</div>
+
+<div id="alert-message" class="alert position-fixed top-10 end-0 translate-middle-y mt-3 d-flex align-items-center justify-content-between px-3 py-2 rounded shadow-lg d-none">
+    <span id="alert-text"></span>
+    <button type="button" class="btn-close" aria-label="Close" onclick="closeAlert()"></button>
+</div>
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function updateTotalPrice() {
+            let total = 0;
+            document.querySelectorAll(".select-item:checked").forEach(checkbox => {
+                let row = checkbox.closest("tr");
+                let price = parseInt(row.querySelector(".subtotal").textContent.replace(/\D/g, ""));
+                total += price;
+            });
+
+            document.getElementById("total-price").textContent = total.toLocaleString("vi-VN") + " đ";
+            document.getElementById("checkout-btn").disabled = total === 0;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            updateTotalPrice();
+
+            // Chọn/Bỏ chọn tất cả sản phẩm
+            document.getElementById("select-all").addEventListener("change", function () {
+                let checkboxes = document.querySelectorAll(".select-item");
+                checkboxes.forEach(cb => cb.checked = this.checked);
+                updateTotalPrice();
+            });
+
+            // Khi chọn từng sản phẩm
+            document.querySelectorAll(".select-item").forEach(checkbox => {
+                checkbox.addEventListener("change", updateTotalPrice);
+            });
+
+            // Cập nhật số lượng sản phẩm
+            document.querySelectorAll(".quantity-input").forEach(input => {
+                input.addEventListener("change", function () {
+                    let cartDetailId = this.getAttribute("data-id");
+                    let newQuantity = parseInt(this.value);
+
+                    if (newQuantity < 1) {
+                        this.value = 1;
+                        newQuantity = 1;
+                    }
+
+                    fetch(`/Cart/UpdateQuantity?cartDetailId=${cartDetailId}&quantity=${newQuantity}`, { method: "POST" })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                this.closest("tr").querySelector(".subtotal").textContent = (data.newTotal).toLocaleString("vi-VN") + " đ";
+                                updateTotalPrice();
+                            }
+                        });
+                });
+            });
+            
+            function updateTotal(cartDetailId, newQuantity) {
+                let row = $(`button[data-id='${cartDetailId}']`).closest("tr");
+                let priceText = row.find("td:nth-child(3)").text(); // Lấy giá từ cột Đơn giá (cột thứ 3)
+                let price = parseFloat(priceText.replace(/[^\d]/g, '')); // Loại bỏ ký tự không phải số
+
+                let newTotal = newQuantity * price; // Tính thành tiền
+
+                row.find(".quantity-display").text(newQuantity);
+                row.find(".subtotal").text(newTotal.toLocaleString("vi-VN") + " đ");
+                updateTotalPrice();
+            }
+
+            // Cập nhật lại số lượng hàng trong giỏ
+            let userId = document.querySelector(".remove-item").getAttribute("data-userID");
+            function updateCartCount() {
+                $.get(`/Home/GetCartCount?userId=${encodeURIComponent(userId)}`, function (data) {
+                    $("#cart-count").text(data.count);
+                }).fail(function () {
+                    console.error("Không thể lấy dữ liệu giỏ hàng.");
+                });
+            }
+            $(".btn-increase").click(function () {
+                var cartDetailId = $(this).data("id");
+                $.post('/Cart/IncreaseQuantity', { cartDetailId: cartDetailId }, function (response) {
+                    if (response.success) {
+                        updateTotal(cartDetailId, response.newQuantity);
+                    }
+                });
+            });
+
+            $(".btn-decrease").click(function () {
+                var cartDetailId = $(this).data("id");
+                let row = $(this).closest("tr");
+                let quantity = parseInt(row.find(".quantity-display").text()); 
+
+                if (quantity <= 1) {
+                    return; // Không giảm dưới 1
+                }
+                $.post('/Cart/DecreaseQuantity', { cartDetailId: cartDetailId }, function (response) {
+                    if (response.success) {
+                        updateTotal(cartDetailId, response.newQuantity);
+                    }
+                });
+            });
+            // Xóa một sản phẩm
+            $(document).on("click", ".remove-item", function () {
+                let cartDetailId = $(this).data("id");
+                let row = $(this).closest("tr");
+
+                if (!confirm("Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?")) {
+                    return;
+                }
+
+                $.ajax({
+                    url: "/Cart/RemoveProductCart",
+                    type: "POST",   
+                    data: { cartDetailId: cartDetailId },
+                    success: function (response) {
+                        if (response.success) {
+                            row.fadeOut(300, function () {
+                                $(this).remove();
+                                showMessage("Sản phẩm đã được xóa khỏi giỏ hàng!", "success");
+                                updateTotalPrice();
+                                updateCartCount();
+                            });
+                        } else {
+                            showMessage("Xóa sản phẩm thất bại!", "error");
+                        }
+                    },
+                    error: function () {
+                        showMessage("Đã xảy ra lỗi!", "error");
+                    }
+                });
+            });
+
+            // Xóa nhiều sản phẩm đã chọn
+            document.getElementById("remove-selected").addEventListener("click", function () {
+                let selectedItems = document.querySelectorAll(".select-item:checked");
+                if (selectedItems.length === 0) return;
+
+                let selectedIds = Array.from(selectedItems).map(cb => cb.getAttribute("data-id"));
+
+                fetch(`/Cart/RemoveMultiple`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ cartDetailIds: selectedIds })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        selectedItems.forEach(cb => cb.closest("tr").remove());
+                        updateTotalPrice();
+                    }
+                });
+            });
+        });
+        let alertTimeout;
+
+        function showMessage(message, type) {
+            var alertBox = $("#alert-message");
+            $("#alert-text").text(message);
+
+            alertBox.removeClass("alert-success alert-danger d-none") // Xóa class ẩn
+                    .addClass(type === "success" ? "alert-success" : "alert-danger");
+
+            alertBox.css("display", "block").addClass("show-alert");
+
+            clearTimeout(alertTimeout);
+
+            alertTimeout = setTimeout(function () {
+                closeAlert();
+            }, 3000);
+        }
+
+        function closeAlert() {
+            var alertBox = $("#alert-message");
+            alertBox.removeClass("show-alert"); 
+            setTimeout(() => {
+                alertBox.fadeOut(300, function () {
+                    $(this).addClass("d-none"); 
+                });
+            }, 200);
+        }
+    </script>
+}
+
+<style>
+    #alert-message {
+        position: fixed;
+        top: 20px;
+        right: -300px;
+        min-width: 250px;
+        max-width: 350px;
+        background-color: white;
+        border-left: 5px solid;
+        z-index: 1050;
+        transition: right 0.5s ease-in-out;
+        display: none; 
+    }
+
+    .alert-success {
+        border-color: #28a745;
+        color: #155724;
+        background-color: #d4edda;
+    }
+
+    .alert-danger {
+        border-color: #dc3545;
+        color: #721c24;
+        background-color: #f8d7da;
+    }
+
+    .show-alert {
+        right: 20px !important;
+    }
+</style>

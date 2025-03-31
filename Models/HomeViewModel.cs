@@ -23,4 +23,14 @@ namespace BTL_WEBNC.Models.ViewModels
         public int Stock { get; set; }
     }
 
+    public class CartDetailModel
+    {
+        public int CartDetailId { get; set; }
+        public int ProductID { get; set; }
+        public int Quantity { get; set; }
+        public string ProductName { get; set; }
+        public float ProductPrice { get; set; }
+        public string ImageUrl { get; set; }
+    }
+
 }
