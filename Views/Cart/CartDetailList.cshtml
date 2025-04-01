@@ -1,5 +1,5 @@
 @using Microsoft.AspNetCore.Identity
-@model List<BTL_WEBNC.Models.ViewModels.CartDetailModel>
+@model BTL_WEBNC.Models.ViewModels.CartDetailProductModel
 
 @inject UserManager<User> UserManager
 @{
@@ -9,7 +9,7 @@
 <div class="container mt-4">
     <h2 class="mb-5">🛒 Giỏ hàng của bạn</h2>
 
-    @if (Model == null || !Model.Any())
+    @if (Model == null || !Model.CartDetails.Any())
     {
         <div class="alert alert-warning">Giỏ hàng của bạn đang trống.</div>
     }
@@ -27,7 +27,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in Model.CartDetails)
                 {
                     <tr>
                         <td>
@@ -57,12 +57,48 @@
                 }
             </tbody>
         </table>
-
-
         <div class="d-flex justify-content-between align-items-center">
             <button class="btn btn-danger btn-sm" id="remove-selected">🗑 Xóa mục đã chọn</button>
             <h4 class="fw-bold">Tổng tiền: <span id="total-price" class="text-danger">0 đ</span></h4>
             <button class="btn btn-success" id="checkout-btn" disabled>💳 Thanh toán ngay</button>
+        </div>
+        <div class="mt-5">
+            <h4 class="text-uppercase">Có thể bạn cũng thích</h4>
+            <div class="row g-4 mt-1 mb-5">
+                @foreach(var itemproduct in Model.ProductCategory){
+                        <div class="product-card">
+                            <a class="home-product-item" asp-action="ProductDetail" asp-controller="Home" asp-route-productId="@itemproduct.Product_Id">
+                                <div class="home-product-item__img" style="background-image: url(@itemproduct.Images);"></div>
+                                <h4 class="home-product-item__name">@itemproduct.Name</h4>
+                                <div class="home-product-item__price">
+                                    <span class="home-product-item__price-old">@itemproduct.Price.ToString("N0")đ</span>
+                                    <span class="home-product-item__price-current">999.000đ</span>
+                                </div>
+                                <div class="home-product-item__action">
+                                    <span class="home-product-item__like">
+                                        <i class="far fa-heart"></i>
+                                    </span>
+                                    <div class="home-product-item__rating">
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="home-product-item__sold">88 đã bán</span>
+                                </div>
+                                <div class="home-product-item__origin">
+                                    <span class="home-product-item__brand">Whoo</span>
+                                    <span class="home-product-item__origin-name">Hà Nội</span>
+                                </div>
+                                <div class="home-product-item__sale-off">
+                                    <span class="home-product-item__sale-off-percent">43%</span>
+                                    <span class="home-product-item__sale-off-label">SALE</span>
+                                </div>
+                            </a>
+                        </div>
+                }
+            </div>
         </div>
     }
 </div>

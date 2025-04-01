@@ -1,4 +1,5 @@
 
+using BTL_WEBNC.Models;
 using BTL_WEBNC.Models.ViewModels;
 using BTL_WEBNC.Repositories;
 
@@ -30,6 +31,11 @@ namespace BTL_WEBNC.Services
         public async Task<List<CartDetailModel>> GetCartDetailsByUserId(string userId)
         {
             return await _cartRepository.GetCartDetailsByUserId(userId);
+        }
+
+        public async Task<List<Product>> GetProductsAsync()
+        {
+            return await _cartRepository.GetProductsAsync();
         }
 
         public async Task<bool> IncreaseQuantityAsync(int cartDetailId)

@@ -90,9 +90,17 @@ namespace BTL_WEBNC.Repositories
                             Quantity = cd.Quantity,
                             ProductName = cd.Product.Name,
                             ProductPrice = cd.Product.Price,
-                            ImageUrl = cd.Product.Images
+                            ImageUrl = cd.Product.Images,
                         })
                         .ToListAsync();
+        }
+
+        public async Task<List<Product>> GetProductsAsync()
+        {
+            return await _context.Products
+                .OrderByDescending(p => p.CreatedAt) // Sắp xếp sản phẩm mới nhất
+                .Take(10)
+                .ToListAsync();
         }
 
         public async Task<bool> IncreaseQuantityAsync(int cartDetailId)

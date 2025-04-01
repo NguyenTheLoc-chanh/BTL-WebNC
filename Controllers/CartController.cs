@@ -1,4 +1,5 @@
 using BTL_WEBNC.Models;
+using BTL_WEBNC.Models.ViewModels;
 using BTL_WEBNC.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -27,10 +28,18 @@ namespace BTL_WEBNC.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return RedirectToAction("Login", "Account"); 
+                return Redirect("/login");
             }
             var cartDetails = await _cartService.GetCartDetailsByUserId(user.Id);
-            return View(cartDetails);
+            
+            var products = await _cartService.GetProductsAsync();
+
+            var model = new CartDetailProductModel
+            {
+                CartDetails = cartDetails,
+                ProductCategory = products,
+            };
+            return View(model);
         }
 
         [HttpPost("IncreaseQuantity")]

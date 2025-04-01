@@ -33,4 +33,11 @@ namespace BTL_WEBNC.Models.ViewModels
         public string ImageUrl { get; set; }
     }
 
+    public class CartDetailProductModel
+    {
+        public List<CartDetailModel> CartDetails { get; set; }
+
+        public List<Product> ProductCategory { get; set; }
+    }
+
 }

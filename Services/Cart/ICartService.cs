@@ -12,5 +12,6 @@ namespace BTL_WEBNC.Services
         Task<bool> RemoveFromCart(int cartDetailId);
         Task<bool> IncreaseQuantityAsync(int cartDetailId);
         Task<bool> DecreaseQuantityAsync(int cartDetailId);
+        Task<List<Product>> GetProductsAsync();
     }
 }

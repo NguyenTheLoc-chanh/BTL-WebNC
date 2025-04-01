@@ -13,5 +13,6 @@ namespace BTL_WEBNC.Repositories
 
         Task<bool> IncreaseQuantityAsync(int cartDetailId);
         Task<bool> DecreaseQuantityAsync(int cartDetailId);
+        Task<List<Product>> GetProductsAsync();
     }
 }
