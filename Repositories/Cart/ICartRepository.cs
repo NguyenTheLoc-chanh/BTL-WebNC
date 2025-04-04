@@ -14,5 +14,11 @@ namespace BTL_WEBNC.Repositories
         Task<bool> IncreaseQuantityAsync(int cartDetailId);
         Task<bool> DecreaseQuantityAsync(int cartDetailId);
         Task<List<Product>> GetProductsAsync();
+        Task<List<CartDetailModel>> GetSelectedCartDetailsAsync(string userId, List<int> cartDetailIds);
+        Task<float> CalculateTotalAmountAsync(List<int> cartDetailIds);
+        Task<List<Address>> GetUserAddressesAsync(string userId);
+
+        Task<bool> AddAddressAsync(string userId, string FullName, string PhoneNumber, string StreetAddress, bool IsDefault);
+        Task<bool> UpdateAddressAsync(Address updatedAddress);
     }
 }

@@ -68,5 +68,108 @@ namespace BTL_WEBNC.Controllers
             bool success = await _cartService.RemoveFromCart(cartDetailId);
             return Json(new { success });
         }
+
+        // Checkout
+        [HttpGet("Checkout/{selectedItems}")]
+        public async Task<IActionResult> Checkout(string selectedItems)
+        {
+            if (string.IsNullOrEmpty(selectedItems))
+            {
+                return RedirectToAction("Index");
+            }
+
+            try
+            {
+                // Kiểm tra xem tất cả phần tử có phải số hay không
+                var cartDetailIds = selectedItems
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries) // Loại bỏ khoảng trắng và phần tử trống
+                    .Select(s => 
+                    {
+                        if (int.TryParse(s, out int id))
+                            return id;
+                        throw new FormatException($"Giá trị '{s}' không hợp lệ.");
+                    })
+                    .ToList();
+
+                var userId = _userManager.GetUserId(User);
+                if (userId == null)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+
+                // Lấy thông tin sản phẩm
+                var selectedProducts = await _cartService.GetSelectedCartDetailsAsync(userId, cartDetailIds);
+
+                // Tính tổng tiền
+                float totalAmount = await _cartService.CalculateTotalAmountAsync(cartDetailIds);
+                // Lấy danh sách địa chỉ của người dùng
+                var addresses = await _cartService.GetUserAddressesAsync(userId);
+                var defaultAddress = addresses.FirstOrDefault(a => a.IsDefault) ?? addresses.FirstOrDefault();
+
+                ViewBag.TotalAmount = totalAmount;
+                ViewBag.SelectedAddress = defaultAddress;
+                ViewBag.Addresses = addresses;
+                return View(selectedProducts);
+            }
+            catch (FormatException ex)
+            {
+                // Log lỗi và hiển thị thông báo lỗi thân thiện
+                _logger.LogError(ex, "Lỗi khi xử lý selectedItems: {SelectedItems}", selectedItems);
+                return BadRequest("Dữ liệu không hợp lệ. Vui lòng chọn sản phẩm đúng định dạng.");
+            }
+        }
+
+
+        [HttpPost("AddAddress")]
+        public async Task<IActionResult> AddAddress([FromBody] AddressDto addressDto)
+        {
+            try
+            {
+                // Gọi service
+                var result = await _cartService.AddAddressAsync(addressDto.UserId, addressDto.FullName, addressDto.PhoneNumber, addressDto.StreetAddress, addressDto.IsDefault);
+
+                if (result == true)
+                {
+                    return Json(new { success = true, message = "Thêm địa chỉ mới thành công!" });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Thêm địa chỉ mới thất bại!" });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Lỗi khi xử lý thêm địa chỉ");
+                return Json(new { success = false, message = "Đã xảy ra lỗi hệ thống: " + ex.Message });
+            }
+        }
+
+        public class AddressDto
+        {
+            public string FullName { get; set; }
+            public string PhoneNumber { get; set; }
+            public string StreetAddress { get; set; }
+            public bool IsDefault { get; set; }
+            public string UserId { get; set; }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateAddress([FromBody] Address updatedAddress)
+        {
+            try
+            {
+                bool result = await _cartService.UpdateAddressAsync(updatedAddress);
+                if (result)
+                {
+                    return Json(new { success = true });
+                }
+                return Json(new { success = false, message = "Không thể cập nhật địa chỉ." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Lỗi khi cập nhật địa chỉ.");
+                return Json(new { success = false, message = "Có lỗi xảy ra." });
+            }
+        }
     }
 }

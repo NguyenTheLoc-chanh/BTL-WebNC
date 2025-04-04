@@ -39,5 +39,10 @@ namespace BTL_WEBNC.Models
         public DbSet<CartModel> Carts { get; set; }
         public DbSet<CartDetails> CartDetails { get; set; }
 
+        public DbSet<Address> AddressUser { get; set; }
+
+        public DbSet<Orders> Orders { get; set; }
+        public DbSet<OrderDetails> OrderDetails { get; set; }
+
     }
 }

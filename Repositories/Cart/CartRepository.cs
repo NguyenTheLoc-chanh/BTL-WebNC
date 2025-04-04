@@ -51,6 +51,7 @@ namespace BTL_WEBNC.Repositories
             return true;
         }
 
+
         public async Task<bool> DecreaseQuantityAsync(int cartDetailId)
         {
             var cartDetail = await _context.CartDetails.FindAsync(cartDetailId);
@@ -103,6 +104,30 @@ namespace BTL_WEBNC.Repositories
                 .ToListAsync();
         }
 
+        // Chuyển sang thanh toán
+        public async Task<float> CalculateTotalAmountAsync(List<int> cartDetailIds)
+        {
+            return await _context.CartDetails
+                .Where(cd => cartDetailIds.Contains(cd.CartDetailId))
+                .SumAsync(cd => cd.Product.Price * cd.Quantity);
+        }
+
+        public async Task<List<CartDetailModel>> GetSelectedCartDetailsAsync(string userId, List<int> cartDetailIds)
+        {
+            return await _context.CartDetails
+            .Include(cd => cd.Product)
+            .Where(cd => cd.Cart.Id == userId && cartDetailIds.Contains(cd.CartDetailId))
+            .Select(cd => new CartDetailModel
+            {
+                CartDetailId = cd.CartDetailId,
+                ProductName = cd.Product.Name,
+                ProductPrice = cd.Product.Price,
+                Quantity = cd.Quantity,
+                ImageUrl = cd.Product.Images
+            })
+            .ToListAsync();
+        }
+
         public async Task<bool> IncreaseQuantityAsync(int cartDetailId)
         {
             var cartDetail = await _context.CartDetails.FindAsync(cartDetailId);
@@ -119,6 +144,90 @@ namespace BTL_WEBNC.Repositories
             if (cartDetail != null)
             {
                 _context.CartDetails.Remove(cartDetail);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<List<Address>> GetUserAddressesAsync(string userId)
+        {
+            return await _context.AddressUser
+            .Where(a => a.user_Id == userId)
+            .ToListAsync();
+        }
+
+        public async Task<bool> AddAddressAsync(string userId, string FullName, string PhoneNumber, string StreetAddress, bool IsDefault)
+        {
+            try
+            {
+                // Kiểm tra các trường bắt buộc
+                if (string.IsNullOrWhiteSpace(FullName))
+                {
+                    return false;
+                }
+
+                if (string.IsNullOrWhiteSpace(PhoneNumber))
+                {
+                    return false;
+                }
+
+                if (string.IsNullOrWhiteSpace(StreetAddress))
+                {
+                    return false;
+                }
+
+                if (string.IsNullOrWhiteSpace(userId))
+                {
+                    return false;
+                }
+
+                // Nếu đây là địa chỉ mặc định, hủy mặc định của các địa chỉ khác
+                if (IsDefault)
+                {
+                    var defaultAddresses = await _context.AddressUser
+                        .Where(a => a.user_Id == userId && a.IsDefault)
+                        .ToListAsync();
+
+                    foreach (var address in defaultAddresses)
+                    {
+                        address.IsDefault = false;
+                    }
+                }
+
+                // Thêm địa chỉ mới
+                var addressUser = new Address{
+                    FullName = FullName,
+                    PhoneNumber = PhoneNumber,
+                    StreetAddress = StreetAddress,
+                    IsDefault = IsDefault,
+                    user_Id = userId,
+                };
+                _context.AddressUser.Add(addressUser);
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (DbUpdateException ex)
+            {
+                return false;
+            }
+            catch (Exception ex)
+            {
+                // Log lỗi tổng quát
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateAddressAsync(Address updatedAddress)
+        {
+            var address = await _context.AddressUser.FindAsync(updatedAddress.Id);
+            if (address != null)
+            {
+                address.FullName = updatedAddress.FullName;
+                address.PhoneNumber = updatedAddress.PhoneNumber;
+                address.StreetAddress = updatedAddress.StreetAddress;
+
                 await _context.SaveChangesAsync();
                 return true;
             }

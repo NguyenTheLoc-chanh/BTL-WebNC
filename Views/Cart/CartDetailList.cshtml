@@ -58,9 +58,9 @@
             </tbody>
         </table>
         <div class="d-flex justify-content-between align-items-center">
-            <button class="btn btn-danger btn-sm" id="remove-selected">🗑 Xóa mục đã chọn</button>
+            @* <button class="btn btn-danger btn-sm" id="remove-selected">🗑 Xóa mục đã chọn</button> *@
             <h4 class="fw-bold">Tổng tiền: <span id="total-price" class="text-danger">0 đ</span></h4>
-            <button class="btn btn-success" id="checkout-btn" disabled>💳 Thanh toán ngay</button>
+            <button class="btn btn-success" id="checkout-btn" onclick="proceedToCheckout()">Thanh toán ngay</button>
         </div>
         <div class="mt-5">
             <h4 class="text-uppercase">Có thể bạn cũng thích</h4>
@@ -235,7 +235,7 @@
             });
 
             // Xóa nhiều sản phẩm đã chọn
-            document.getElementById("remove-selected").addEventListener("click", function () {
+            @* document.getElementById("remove-selected").addEventListener("click", function () {
                 let selectedItems = document.querySelectorAll(".select-item:checked");
                 if (selectedItems.length === 0) return;
 
@@ -253,7 +253,7 @@
                         updateTotalPrice();
                     }
                 });
-            });
+            }); *@
         });
         let alertTimeout;
 
@@ -281,6 +281,20 @@
                     $(this).addClass("d-none"); 
                 });
             }, 200);
+        }
+        function proceedToCheckout() {
+            let selectedItems = [];
+            document.querySelectorAll(".select-item:checked").forEach(checkbox => {
+                selectedItems.push(checkbox.getAttribute("data-id"));
+            });
+
+            if (selectedItems.length === 0) {
+                showMessage("Vui lòng chọn ít nhất một sản phẩm để thanh toán", "error");
+                return;
+            }
+
+            // Chuyển đến trang thanh toán với danh sách ID các sản phẩm đã chọn
+            window.location.href = `/Cart/Checkout/${selectedItems.join(',')}`;
         }
     </script>
 }

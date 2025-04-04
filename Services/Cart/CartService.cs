@@ -38,6 +38,15 @@ namespace BTL_WEBNC.Services
             return await _cartRepository.GetProductsAsync();
         }
 
+        public async Task<float> CalculateTotalAmountAsync(List<int> cartDetailIds)
+        {
+            return await _cartRepository.CalculateTotalAmountAsync(cartDetailIds);
+        }
+        public async Task<List<CartDetailModel>> GetSelectedCartDetailsAsync(string userId, List<int> cartDetailIds)
+        {
+            return await _cartRepository.GetSelectedCartDetailsAsync(userId, cartDetailIds);
+        }
+
         public async Task<bool> IncreaseQuantityAsync(int cartDetailId)
         {
             return await _cartRepository.IncreaseQuantityAsync(cartDetailId);
@@ -46,6 +55,21 @@ namespace BTL_WEBNC.Services
         public async Task<bool> RemoveFromCart(int cartDetailId)
         {
             return await _cartRepository.RemoveFromCartAsync(cartDetailId);
+        }
+
+        public async Task<List<Address>> GetUserAddressesAsync(string userId)
+        {
+            return await _cartRepository.GetUserAddressesAsync(userId);
+        }
+
+        public async Task<bool> AddAddressAsync(string userId, string FullName, string PhoneNumber, string StreetAddress, bool IsDefault)
+        {
+            return await _cartRepository.AddAddressAsync(userId,FullName,PhoneNumber,StreetAddress,IsDefault);
+        }
+
+        public async Task<bool> UpdateAddressAsync(Address updatedAddress)
+        {
+            return await _cartRepository.UpdateAddressAsync(updatedAddress);
         }
     }
 }

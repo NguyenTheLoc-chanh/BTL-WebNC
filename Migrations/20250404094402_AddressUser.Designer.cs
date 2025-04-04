@@ -4,6 +4,7 @@ using BTL_WEBNC.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BTL_WEBNC.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250404094402_AddressUser")]
+    partial class AddressUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -166,13 +169,7 @@ namespace BTL_WEBNC.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("order_Id"));
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
                     b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<int>("address_Id")
                         .HasColumnType("int");
 
                     b.Property<double>("total_price")
@@ -183,8 +180,6 @@ namespace BTL_WEBNC.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("order_Id");
-
-                    b.HasIndex("Id");
 
                     b.HasIndex("user_Id");
 
@@ -573,12 +568,6 @@ namespace BTL_WEBNC.Migrations
 
             modelBuilder.Entity("BTL_WEBNC.Models.Orders", b =>
                 {
-                    b.HasOne("BTL_WEBNC.Models.Address", "address")
-                        .WithMany()
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("BTL_WEBNC.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("user_Id")
@@ -586,8 +575,6 @@ namespace BTL_WEBNC.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-
-                    b.Navigation("address");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.Product", b =>
