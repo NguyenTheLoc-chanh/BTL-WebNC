@@ -1,0 +1,97 @@
+﻿@page "/register/"
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="auth-form shadow-lg">
+        <form class="auth-form__container" id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <div class="auth-form__header">
+                <h3 class="auth-form__heading">Đăng ký</h3>
+                <a asp-area="Identity" asp-page="/Account/Login" class="auth-form__switch-btn text-decoration-none">Đăng nhập</a>
+            </div>
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+            <div class="auth-form__form">
+                <div class="auth-form__group">
+                    <input asp-for="Input.Email" class="auth-form__input" autocomplete="username" placeholder="Email của bạn" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                
+                <div class="auth-form__group">
+                    <input asp-for="Input.UserName" class="auth-form__input" autocomplete="username" placeholder="Tên tài khoản" />
+                    <span asp-validation-for="Input.UserName" class="text-danger"></span>
+                </div>
+
+                <div class="auth-form__group">
+                    <input asp-for="Input.Password" class="auth-form__input" type="password" autocomplete="new-password" placeholder="Mật khẩu" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+
+                <div class="auth-form__group">
+                    <input asp-for="Input.ConfirmPassword" class="auth-form__input" type="password" autocomplete="new-password" placeholder="Xác nhận mật khẩu" />
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="auth-form__aside">
+                <p class="auth-form__polivy-text">
+                    Bằng việc đăng kí, bạn đã đồng ý với Shoppe về
+                    <a href="#" class="auth-form__text-link">Điều khoản dịch vụ</a> &
+                    <a href="#" class="auth-form__text-link">Chính sách bảo mật</a>
+                </p>
+            </div>
+
+            <div class="auth-form__controls">
+                <a asp-controller="Home" asp-action="Index" class="btn auth-form__controls-back btn--normal">Trở lại</a>
+                <button id="registerSubmit" type="submit" class="btn btn--primary ms-2">ĐĂNG KÝ</button>
+            </div>
+
+            <div class="auth-form__socials">
+                <a href="#" class="auth-form__socials--facebook btn btn--size-s btn--with-icon">
+                    <i class="auth-form__socials-icon fab fa-facebook-square"></i>
+                    <span class="auth-form__socials-title">Kết nối với Facebook</span>
+                </a>
+                <a href="#" class="auth-form__socials--google btn btn--size-s btn--with-icon">
+                    <i class="auth-form__socials-icon fab fa-google"></i>
+                    <span class="auth-form__socials-title">Kết nối với Google</span>
+                </a>
+            </div>
+        </form>
+    </div>
+    @* <div class="col-md-6 col-md-offset-2">
+        <section>
+            <h3>Use another service to register.</h3>
+            <hr />
+            @{
+                if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                {
+                    <div>
+                        <p>
+                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
+                            about setting up this ASP.NET application to support logging in via external services</a>.
+                        </p>
+                    </div>
+                }
+                else
+                {
+                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                        <div>
+                            <p>
+                                @foreach (var provider in Model.ExternalLogins!)
+                                {
+                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                }
+                            </p>
+                        </div>
+                    </form>
+                }
+            }
+        </section>
+    </div> *@
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

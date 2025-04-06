@@ -1,0 +1,224 @@
+@model BTL_WEBNC.Models.ViewModels.ProductSizeModel
+
+@{
+    ViewData["Title"] = Model?.Product.Name ?? "Chi tiết sản phẩm";
+}
+@if (Model == null)
+{
+    <h2>Sản phẩm không tồn tại.</h2>
+}else{
+<div>
+    <div class="container-fluid">
+        <div class="d-flex align-items-center gap-2 mt-4 ">
+            <a href="/" class="ct-category-details text-decoration-none fw-medium">Shopee</a>
+            <img src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/productdetailspage/dd5cbafaee315c6c99f4.svg" alt="icon arrow right" class="img-fluid" style="width: 10px;">
+            <a asp-controller="Home" asp-action="Index" asp-route-categoryId="@Model.Product.Category.category_id"
+                class="ct-category-details text-decoration-none fw-medium">
+                @Model.Product.Category.category_Name
+            </a>
+            <img src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/productdetailspage/dd5cbafaee315c6c99f4.svg" alt="icon arrow right" class="img-fluid" style="width: 10px;">
+            <a href="/" class="text-decoration-none text-dark fw-medium">@Model.Product.Name</a>
+        </div>
+
+        <div class="row bg-white mt-lg-4">
+            <div class="col-md-5">
+                <div class="border rounded p-3">
+                    <img src="@Model.Product.Images" class="img-fluid w-100" alt="@Model.Product.Name">
+                </div>
+            </div>
+            <!-- Thông tin sản phẩm -->
+            <div class="col-md-7">
+                <h2 class="fw-bold">@Model.Product.Name</h2>
+                
+                <!-- Đánh giá và lượt mua -->
+                <div class="d-flex align-items-center">
+                    <span class="me-2 text-warning">
+                        ★★★★☆ (4.8)
+                    </span>
+                    <span class="text-muted ms-2">| Đã bán: 1200+</span>
+                </div>
+
+                <!-- Giá sản phẩm -->
+                <div class="mt-3">
+                    <span class="text-danger fs-3 fw-bold">@Model.Product.Price.ToString("N0")đ</span>
+                    <span class="text-muted text-decoration-line-through ms-2">@(Model.Product.Price * 1.2)đ</span>
+                    <span class="badge bg-danger ms-2">Giảm 20%</span>
+                </div>
+                <!-- Chọn Size -->
+                <div class="mt-3">
+                    <label class="fw-bold mb-2">Kích cỡ</label>
+                    <div class="d-flex flex-wrap">
+                        @foreach (var size in Model.Sizes)
+                        {
+                            <button class="btn btn-outline-primary m-1 size-option" data-size="@size.Size_Id" data-stock="@size.Stock">@size.Name</button>
+                        }
+                    </div>
+                    <p class="mt-2 text-muted" id="stock-info">Kho còn: @Model.Product.Stock sản phẩm</p>
+                </div>
+
+                <!-- Chọn số lượng -->
+                <div class="mt- mb-5">
+                    <label class="fw-bold mb-2">Số lượng:</label>
+                    <div class="d-flex">
+                        <button class="btn btn-outline-secondary btn-decrease" disabled>-</button>
+                        <span class="form-control text-center mx-2 quantity-display" style="width: 50px;">1</span>
+                        <button class="btn btn-outline-secondary btn-increase" disabled>+</button>
+                    </div>
+                </div>
+
+                <!-- Nút mua hàng -->
+                <div class="mt-4">
+                    <button class="btn__addCart btn btn-lg px-4 me-4">
+                        <i class="fas fa-cart-plus"></i> Thêm vào giỏ hàng
+                    </button>
+                    <button class="btn__addBuy btn btn-lg px-5 me-3">Mua ngay</button>
+                </div>
+            </div>
+        </div>
+        <!-- Thông tin Shop -->
+        <div class="shop-info-container d-flex align-items-center bg-white p-3 rounded shadow-sm mt-4">
+            <!-- Logo Shop -->
+            <div class="shop-logo me-3">
+                <img src="@Model.Sellers.StoreLogo" alt="Logo shop" class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;">
+            </div>
+            
+            <!-- Thông tin Shop -->
+            <div class="shop-details">
+                <h5 class="fw-bold mb-1">@Model.Sellers.StoreName</h5>
+                <p class="text-muted mb-1">Người theo dõi: <span class="fw-medium">10</span></p>
+                
+                <div class="d-flex align-items-center">
+                    <a asp-action="ShopDetail" asp-controller="Shop" asp-route-shopId="@Model.Sellers.seller_Id" 
+                        class="btn btn-outline-primary btn-sm me-2">
+                        <i class="fas fa-store"></i> Vào Shop
+                    </a>
+                    <button class="btn btn-danger btn-sm follow-btn">
+                        <i class="fas fa-plus"></i> Theo dõi
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mô tả sản phẩm -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h4>📌 Mô tả sản phẩm</h4>
+                <p>@Model.Product.Description</p>
+            </div>
+        </div>
+
+        <!-- Đánh giá sản phẩm -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h4>⭐ Đánh giá sản phẩm</h4>
+                <div class="border rounded p-3">
+                    <p><strong>Nguyễn Văn A</strong> - ★★★★★</p>
+                    <p>Sản phẩm rất tốt, đáng mua!</p>
+                </div>
+                <div class="border rounded p-3 mt-2">
+                    <p><strong>Trần Thị B</strong> - ★★★★☆</p>
+                    <p>Giao hàng nhanh, sản phẩm đẹp.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5">
+            <h4 class="text-uppercase">Các sản phẩm khác của Shop</h4>
+            <div class="row g-4 mt-1 mb-5">
+                @foreach(var product in Model.ProductSeller){
+                    <div class="product-card">
+                        <a class="home-product-item" asp-action="ProductDetail" asp-controller="Home" asp-route-productId="@product.Product_Id">
+                            <div class="home-product-item__img" style="background-image: url(@product.Images);"></div>
+                            <h4 class="home-product-item__name">@product.Name</h4>
+                            <div class="home-product-item__price">
+                                <span class="home-product-item__price-old">@product.Price.ToString("N0")đ</span>
+                                <span class="home-product-item__price-current">999.000đ</span>
+                            </div>
+                            <div class="home-product-item__action">
+                                <span class="home-product-item__like">
+                                    <i class="far fa-heart"></i>
+                                </span>
+                                <div class="home-product-item__rating">
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star text-warning"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <span class="home-product-item__sold">88 đã bán</span>
+                            </div>
+                            <div class="home-product-item__origin">
+                                <span class="home-product-item__brand">Whoo</span>
+                                <span class="home-product-item__origin-name">Hà Nội</span>
+                            </div>
+                            <div class="home-product-item__sale-off">
+                                <span class="home-product-item__sale-off-percent">43%</span>
+                                <span class="home-product-item__sale-off-label">SALE</span>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const sizeButtons = document.querySelectorAll(".size-option");
+    const stockInfo = document.getElementById("stock-info");
+    const decreaseBtn = document.querySelector(".btn-decrease");
+    const increaseBtn = document.querySelector(".btn-increase");
+    const quantityDisplay = document.querySelector(".quantity-display");
+
+    let currentQuantity = 1;
+    let stock = 0;
+
+    function disableButtons() {
+        decreaseBtn.setAttribute("disabled", "true");
+        increaseBtn.setAttribute("disabled", "true");
+    }
+    disableButtons();
+
+    sizeButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            // Bỏ chọn tất cả các nút
+            sizeButtons.forEach(btn => btn.classList.remove("active"));
+            
+            // Đánh dấu nút đang chọn
+            this.classList.add("active");
+
+            stock = parseInt(this.getAttribute("data-stock"));
+            stockInfo.textContent = `Kho còn: ${stock} sản phẩm.`;
+
+            currentQuantity = 1;
+            quantityDisplay.textContent = currentQuantity;
+            // Nếu size có hàng thì bật nút tăng/giảm
+            if (stock > 0) {
+                decreaseBtn.removeAttribute("disabled");
+                increaseBtn.removeAttribute("disabled");
+            } else {
+                disableButtons();
+            }
+        });
+    });
+
+    // Xử lý giảm số lượng
+    decreaseBtn.addEventListener("click", function () {
+        if (currentQuantity > 1) {
+            currentQuantity--;
+            quantityDisplay.textContent = currentQuantity;
+        }
+    });
+    // Xử lý tăng số lượng
+    increaseBtn.addEventListener("click", function () {
+        if (currentQuantity < stock) {
+            currentQuantity++;
+            quantityDisplay.textContent = currentQuantity;
+        }
+    });
+});
+
+</script>
+}
+

@@ -1,0 +1,50 @@
+@page "/admin/roles"
+@model BTL_WEBNC.Admin.Roles.IndexModel
+
+@{
+    ViewData["Title"] = "Danh sách các role (vai trò)";
+}
+
+<partial name="_StatusMessage" model="@Model.StatusMessage" />
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold text-primary">@ViewData["Title"]</h2>
+        <a class="btn btn-primary btn-sm" asp-page="./Create">
+            <i class="bi bi-plus-circle"></i> Tạo Role
+        </a>
+        <a class="btn btn-primary btn-sm" asp-page="../User/Index">
+            Quản lý thành viên
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th class="text-center">Tên role (Vai trò)</th>
+                    <th class="text-center">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var role in Model.roles)
+                {
+                    <tr>
+                        <td class="text-center">@role.Name</td>
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center gap-1">
+                                <a class="btn btn-warning btn-sm px-2 py-1 d-inline-block" asp-page="./Edit" asp-route-roleid="@role.Id">
+                                    Cập nhật
+                                    <i class="bi bi-pencil-square"></i> 
+                                </a>
+                                <a class="btn btn-danger btn-sm px-2 py-1 d-inline-block" asp-page="./Delete" asp-route-roleid="@role.Id">
+                                    Xóa
+                                    <i class="bi bi-trash"></i> 
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

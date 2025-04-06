@@ -1,0 +1,39 @@
+﻿@model IEnumerable<BTL_WEBNC.Models.Product>
+
+@{
+    ViewData["Title"] = "Quản Lý Sản Phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Danh Sách Sản Phẩm</h2>
+
+<p>
+    <a class="btn btn-primary" href="@Url.Action("Create", "HomeAdmin", new { area = "Admin" })">Thêm Sản Phẩm</a>
+</p>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.First().Product_Id)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Name)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Price)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Stock)</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Product_Id</td>
+                <td>@item.Name</td>
+                <td>@item.Price</td>
+                <td>@item.Stock</td>
+                <td>
+                    <a class="btn btn-warning btn-sm" href="@Url.Action("Edit", "HomeAdmin", new { area = "Admin", id = item.Product_Id })">Edit</a>
+                    <a class="btn btn-danger btn-sm" href="@Url.Action("Delete", "HomeAdmin", new { area = "Admin", id = item.Product_Id })">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

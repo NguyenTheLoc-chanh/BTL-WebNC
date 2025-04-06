@@ -1,0 +1,28 @@
+﻿@model BTL_WEBNC.Areas.Admin.ViewModels.SellerRegistrationViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Đăng ký người bán";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Hoặc dùng layout Admin nếu có
+}
+
+<h2>Đăng ký người bán</h2>
+
+<form asp-action="RegisterSeller" method="post">
+    <div class="form-group">
+        <label asp-for="StoreName"></label>
+        <input asp-for="StoreName" class="form-control" />
+        <span asp-validation-for="StoreName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="StoreDescription"></label>
+        <textarea asp-for="StoreDescription" class="form-control"></textarea>
+        <span asp-validation-for="StoreDescription" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Gửi yêu cầu</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

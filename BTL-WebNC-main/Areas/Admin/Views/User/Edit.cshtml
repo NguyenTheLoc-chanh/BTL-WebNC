@@ -1,0 +1,34 @@
+﻿@model BTL_WEBNC.Areas.Admin.ViewModels.EditUserViewModel
+
+@{
+    ViewData["Title"] = "Sửa Người Dùng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Sửa Người Dùng</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label asp-for="UserName"></label>
+        <input asp-for="UserName" class="form-control" />
+        <span class="text-danger" asp-validation-for="UserName"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+        <span class="text-danger" asp-validation-for="Email"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Role"></label>
+        <select asp-for="Role" class="form-control">
+            <option value="">-- Chọn Vai Trò --</option>
+            <option value="Admin" selected="@(Model.Role == "Admin" ? "selected" : "")">Admin</option>
+            <option value="Seller" selected="@(Model.Role == "Seller" ? "selected" : "")">Người bán</option>
+            <option value="Customer" selected="@(Model.Role == "Customer" ? "selected" : "")">Khách hàng</option>
+        </select>
+        <span class="text-danger" asp-validation-for="Role"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>
+    <a asp-action="Index" class="btn btn-secondary">Quay Lại</a>
+</form>

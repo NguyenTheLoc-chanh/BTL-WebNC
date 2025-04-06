@@ -1,0 +1,39 @@
+﻿@model IEnumerable<BTL_WEBNC.Models.User>
+
+<h2>Danh sách yêu cầu chờ duyệt</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Tên đăng nhập</th>
+            <th>Email</th>
+            <th>Tên cửa hàng</th>
+            <th>Mô tả</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>@user.StoreName</td>
+                <td>@user.StoreDescription</td>
+                <td>
+                    <!-- Phê duyệt -->
+                    <form asp-action="ApproveUser" method="post" style="display:inline;">
+                        <input type="hidden" name="userId" value="@user.Id" />
+                        <button type="submit" class="btn btn-success btn-sm">Duyệt</button>
+                    </form>
+
+                    <!-- Từ chối -->
+                    <form asp-action="RejectUser" method="post" style="display:inline;">
+                        <input type="hidden" name="userId" value="@user.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm">Từ chối</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

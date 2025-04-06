@@ -1,0 +1,36 @@
+﻿.badge {
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.role-seller {
+    background-color: #17a2b8; /* Màu xanh nhạt */
+    color: white;
+}
+
+.role-customer {
+    background-color: #007bff; /* Màu xanh đậm */
+    color: white;
+}
+
+.role-admin {
+    background-color: #343a40; /* Màu đen */
+    color: white;
+}
+
+.status-pending {
+    background-color: #ffc107; /* Màu vàng */
+    color: black;
+}
+
+.status-approved {
+    background-color: #28a745; /* Màu xanh lá */
+    color: white;
+}
+
+.status-rejected {
+    background-color: #dc3545; /* Màu đỏ */
+    color: white;
+}
