@@ -5,7 +5,7 @@
 namespace BTL_WEBNC.Migrations
 {
     /// <inheritdoc />
-    public partial class OrderDetails : Migration
+    public partial class Orders : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

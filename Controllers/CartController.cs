@@ -3,6 +3,7 @@ using BTL_WEBNC.Models.ViewModels;
 using BTL_WEBNC.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BTL_WEBNC.Controllers
 {
@@ -169,6 +170,63 @@ namespace BTL_WEBNC.Controllers
             {
                 _logger.LogError(ex, "Lỗi khi cập nhật địa chỉ.");
                 return Json(new { success = false, message = "Có lỗi xảy ra." });
+            }
+        }
+
+        // Checkout 
+        [HttpPost("ConfirmCheckout")]
+        public async Task<IActionResult> ConfirmCheckout([FromBody] CheckoutRequest request)
+        {
+            var userId = _userManager.GetUserId(User);
+            var result = await _cartService.ConfirmCheckoutAsync(userId, request);
+
+            if (result.Success)
+            {
+                return Json(new
+                {
+                    success = true,
+                    message = "Xác nhận đơn hàng thành công!",
+                    orderId = result.OrderId,
+                    paymentMethod = request.PaymentMethod
+                });
+            }
+
+            return Json(new
+            {
+                success = false,
+                message = result.Message
+            });
+        }
+
+        [HttpGet("CheckoutSuccess/{orderId}")]
+        public IActionResult CheckoutSuccess(string orderId)
+        {
+            if (!int.TryParse(orderId, out int parsedOrderId) || parsedOrderId <= 0)
+            {
+                return BadRequest("ID đơn hàng không hợp lệ");
+            }
+            // Lấy thông tin đơn hàng từ database
+            try
+            {
+                var order = _context.OrderDetails
+                    // .Include(o => o.OrderDetails)
+                    // .ThenInclude(od => od.Product)
+                    .FirstOrDefault(o => o.order_Id == parsedOrderId); // Sử dụng parsedOrderId
+                if (order == null)
+                {
+                    return NotFound("Đơn hàng không tồn tại");
+                }
+
+                return View(order);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error loading order {orderId}");
+                 return Problem(
+                    title: "Lỗi hệ thống",
+                    detail: $"Không thể xử lý đơn hàng {orderId}. Chi tiết: {ex.Message}",
+                    statusCode: 500
+                );
             }
         }
     }

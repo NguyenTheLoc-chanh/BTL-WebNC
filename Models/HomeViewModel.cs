@@ -40,4 +40,21 @@ namespace BTL_WEBNC.Models.ViewModels
         public List<Product> ProductCategory { get; set; }
     }
 
+    // Check out
+    public class CheckoutRequest
+    {
+        public List<int> CartItemIds { get; set; }
+        public int AddressId { get; set; }
+        public float TotalAmount { get; set; }
+        public string PaymentMethod { get; set; }
+        public List<CartItemDto> CartItems { get; set; }
+    }
+
+    public class CartItemDto
+    {
+        public int ProductId { get; set; }
+        public int Quantity { get; set; }
+        public float Price { get; set; }
+    }
+
 }

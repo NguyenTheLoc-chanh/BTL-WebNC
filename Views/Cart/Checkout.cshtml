@@ -24,6 +24,29 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="card mb-4"></div>
+                <div class="card-header bg-white">
+                    <h5>Phương thức thanh toán</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-check mb-3">
+                        <input class="form-check-input payment-method" type="radio" 
+                            name="paymentMethod" id="cashPayment" value="Tiền mặt" checked>
+                        <label class="form-check-label" for="cashPayment">
+                            <i class="fas fa-money-bill-wave me-2"></i> Thanh toán tiền mặt khi nhận hàng
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input payment-method" type="radio" 
+                            name="paymentMethod" id="bankTransfer" value="Chuyển khoản">
+                        <label class="form-check-label" for="bankTransfer">
+                            <i class="fas fa-university me-2"></i> Chuyển khoản ngân hàng
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-8">
@@ -44,7 +67,7 @@
                         <tbody>
                             @foreach (var item in Model)
                             {
-                                <tr>
+                                <tr data-id="@item.ProductID">
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <img src="@item.ImageUrl" alt="@item.ProductName" style="width: 60px; height: 60px; object-fit: cover;" class="me-3">
@@ -60,7 +83,6 @@
                     </table>
                 </div>
             </div>
-            
             <!-- Thêm form thông tin giao hàng tại đây -->
         </div>
         
@@ -76,12 +98,17 @@
                     </div>
                     <div class="d-flex justify-content-between mb-3">
                         <span>Phí vận chuyển:</span>
-                        <span>0 đ</span> <!-- Có thể thay đổi tùy logic -->
+                        <span>20.000 đ</span> <!-- Có thể thay đổi tùy logic -->
                     </div>
                     <hr>
                     <div class="d-flex justify-content-between fw-bold">
                         <span>Tổng cộng:</span>
-                        <span class="text-danger">@(Model.Sum(p => p.ProductPrice * p.Quantity).ToString("N0")) đ</span>
+                        <span class="text-danger">
+                            @{
+                                var total = Model.Sum(p => p.ProductPrice * p.Quantity) - 20000;
+                                @Html.Raw(total.ToString("N0") + " đ")
+                            }
+                        </span>
                     </div>
                     
                     <button class="btn btn-success w-100 mt-3" id="confirm-checkout">Xác nhận thanh toán</button>
@@ -173,28 +200,47 @@
 
 @section Scripts {
     <script>
-        // Xử lý sự kiện khi click nút xác nhận thanh toán
-        document.getElementById("confirm-checkout").addEventListener("click", function() {
-            // Lấy danh sách ID các sản phẩm đã chọn từ URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const selectedItems = urlParams.get('selectedItems');
+        // Hàm xử lý thanh toán
+        $('#confirm-checkout').click(function(){
+            const btn = $(this);
+            btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang xử lý...');
+            // Lấy dữ liệu từ form
+            const formData = {
+                CartItemIds: @Html.Raw(Json.Serialize(Model.Select(x => x.CartDetailId))),
+                AddressId: @(ViewBag.SelectedAddress?.Id ?? 0),
+                TotalAmount: @(Model.Sum(p => p.ProductPrice * p.Quantity) - 20000),
+                PaymentMethod: $('input[name="paymentMethod"]:checked').val(),
+                CartItems: @Html.Raw(Json.Serialize(Model.Select(m => new {
+                    ProductId = m.ProductID,
+                    Quantity = m.Quantity,
+                    Price = m.ProductPrice
+                })))
+            };
+
+            console.log('Dữ liệu gửi đi:', formData);
             
-            // Gửi yêu cầu thanh toán đến server
-            fetch(`/Cart/ConfirmCheckout?selectedItems=${selectedItems}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.href = "/Cart/CheckoutSuccess"; // Chuyển đến trang thành công
-                } else {
-                    alert("Thanh toán thất bại: " + data.message);
+            $.ajax({
+                url: '@Url.Action("ConfirmCheckout", "Cart")',
+                type: 'POST',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(formData),
+                success: function(data){
+                    if(data.success){
+                        window.location.href = `/Cart/CheckoutSuccess/${data.orderId}`;
+                    } else {
+                        showError(data.message || 'Thanh toán thất bại');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', status, error);
+                    showError('Lỗi kết nối server. Vui lòng thử lại');
+                },
+                complete: function() {
+                    btn.prop('disabled', false).text('Xác nhận thanh toán');
                 }
             });
-        });
+        });    
 
         document.querySelectorAll('.select-address').forEach(button => {
             button.addEventListener('click', function() {

@@ -20,5 +20,6 @@ namespace BTL_WEBNC.Repositories
 
         Task<bool> AddAddressAsync(string userId, string FullName, string PhoneNumber, string StreetAddress, bool IsDefault);
         Task<bool> UpdateAddressAsync(Address updatedAddress);
+        Task<(bool Success, string Message, int OrderId)> ConfirmCheckoutAsync(string userId, CheckoutRequest request);
     }
 }

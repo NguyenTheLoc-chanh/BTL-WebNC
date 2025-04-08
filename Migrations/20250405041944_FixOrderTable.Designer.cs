@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BTL_WEBNC.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20250404123739_OrderDetails")]
-    partial class OrderDetails
+    [Migration("20250405041944_FixOrderTable")]
+    partial class FixOrderTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -165,7 +165,8 @@ namespace BTL_WEBNC.Migrations
                 {
                     b.Property<int>("order_Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("order_Id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("order_Id"));
 
@@ -192,6 +193,39 @@ namespace BTL_WEBNC.Migrations
                     b.HasIndex("user_Id");
 
                     b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("BTL_WEBNC.Models.Payment", b =>
+                {
+                    b.Property<int>("pay_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("pay_id"));
+
+                    b.Property<DateTime>("created_at")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("order_Id")
+                        .HasMaxLength(50)
+                        .HasColumnType("int");
+
+                    b.Property<string>("payment_method")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("pay_id");
+
+                    b.HasIndex("order_Id");
+
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.Product", b =>
@@ -591,6 +625,17 @@ namespace BTL_WEBNC.Migrations
                     b.Navigation("User");
 
                     b.Navigation("address");
+                });
+
+            modelBuilder.Entity("BTL_WEBNC.Models.Payment", b =>
+                {
+                    b.HasOne("BTL_WEBNC.Models.Orders", "Orders")
+                        .WithMany()
+                        .HasForeignKey("order_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.Product", b =>

@@ -4,6 +4,7 @@ using BTL_WEBNC.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BTL_WEBNC.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250405052305_AddOrderDetailsNavigation")]
+    partial class AddOrderDetailsNavigation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,7 +56,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasIndex("user_Id");
 
-                    b.ToTable("AddressUser", (string)null);
+                    b.ToTable("AddressUser");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.CartDetails", b =>
@@ -84,7 +87,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasIndex("Size_Id");
 
-                    b.ToTable("CartDetails", (string)null);
+                    b.ToTable("CartDetails");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.CartModel", b =>
@@ -104,7 +107,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasKey("CartId");
 
-                    b.ToTable("Carts", (string)null);
+                    b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.Category", b =>
@@ -126,7 +129,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasKey("category_id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.OrderDetails", b =>
@@ -155,7 +158,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasIndex("order_Id");
 
-                    b.ToTable("OrderDetails", (string)null);
+                    b.ToTable("OrderDetails");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.Orders", b =>
@@ -185,7 +188,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasIndex("user_Id");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.Payment", b =>
@@ -218,7 +221,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasIndex("order_Id");
 
-                    b.ToTable("Payments", (string)null);
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.Product", b =>
@@ -265,7 +268,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasIndex("seller_Id");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.ProductSize", b =>
@@ -291,7 +294,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasIndex("Size_Id");
 
-                    b.ToTable("ProductSizes", (string)null);
+                    b.ToTable("ProductSizes");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.Seller", b =>
@@ -319,7 +322,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasIndex("user_Id");
 
-                    b.ToTable("Sellers", (string)null);
+                    b.ToTable("Sellers");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.Size", b =>
@@ -337,7 +340,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasKey("Size_Id");
 
-                    b.ToTable("Sizes", (string)null);
+                    b.ToTable("Sizes");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.User", b =>

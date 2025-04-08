@@ -119,6 +119,7 @@ namespace BTL_WEBNC.Repositories
             .Where(cd => cd.Cart.Id == userId && cartDetailIds.Contains(cd.CartDetailId))
             .Select(cd => new CartDetailModel
             {
+                ProductID = cd.Product_Id,
                 CartDetailId = cd.CartDetailId,
                 ProductName = cd.Product.Name,
                 ProductPrice = cd.Product.Price,
@@ -232,6 +233,62 @@ namespace BTL_WEBNC.Repositories
                 return true;
             }
             return false;
+        }
+
+        public async Task<(bool Success, string Message, int OrderId)> ConfirmCheckoutAsync(string userId, CheckoutRequest request)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                // 1. Tạo đơn hàng
+                var order = new Orders
+                {
+                    user_Id = userId,
+                    address_Id = request.AddressId,
+                    total_price = request.TotalAmount,
+                    Status = OrderStatus.Pending
+                };
+                _context.Orders.Add(order);
+                await _context.SaveChangesAsync();
+
+                // 2. Chi tiết đơn hàng
+                foreach (var item in request.CartItems)
+                {
+                    var detail = new OrderDetails
+                    {
+                        order_Id = order.Id,
+                        Product_Id = item.ProductId,
+                        Quantity = item.Quantity,
+                        Price = item.Price
+                    };
+                    _context.OrderDetails.Add(detail);
+                }
+
+                // 3. Thanh toán
+                var payment = new Payment
+                {
+                    payment_method = request.PaymentMethod,
+                    status = "pending",
+                    order_Id = order.Id
+                };
+                _context.Payments.Add(payment);
+
+                // 4. Xoá giỏ hàng
+                var cartItems = await _context.CartDetails
+                    .Where(c => c.Cart.Id == userId && request.CartItemIds.Contains(c.CartDetailId))
+                    .ToListAsync();
+                _context.CartDetails.RemoveRange(cartItems);
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return (true, "Success", order.Id);
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return (false, "Lỗi hệ thống", 0);
+            }
         }
     }
 }

@@ -13,8 +13,9 @@ namespace BTL_WEBNC.Models
     [Table("Orders")]
     public class Orders
     {
-        [Key]
-        public int order_Id { get; set; }
+        [Key] 
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
         [Required]
         [Column(TypeName = "float")]
@@ -33,7 +34,9 @@ namespace BTL_WEBNC.Models
         [ForeignKey("user_Id")]
         public virtual User User { get; set; }
 
-        [ForeignKey("Id")]
-        public virtual Address address { get; set; }
+        [ForeignKey("address_Id")]
+        public virtual Address Address { get; set; }
+
+        public virtual ICollection<OrderDetails> OrderDetails { get; set; }
     }
 }

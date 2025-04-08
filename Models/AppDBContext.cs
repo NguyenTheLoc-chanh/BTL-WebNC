@@ -43,6 +43,7 @@ namespace BTL_WEBNC.Models
 
         public DbSet<Orders> Orders { get; set; }
         public DbSet<OrderDetails> OrderDetails { get; set; }
+        public DbSet<Payment> Payments { get; set; }
 
     }
 }

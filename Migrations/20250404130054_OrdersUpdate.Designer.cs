@@ -4,6 +4,7 @@ using BTL_WEBNC.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BTL_WEBNC.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250404130054_OrdersUpdate")]
+    partial class OrdersUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,7 +56,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasIndex("user_Id");
 
-                    b.ToTable("AddressUser", (string)null);
+                    b.ToTable("AddressUser");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.CartDetails", b =>
@@ -84,7 +87,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasIndex("Size_Id");
 
-                    b.ToTable("CartDetails", (string)null);
+                    b.ToTable("CartDetails");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.CartModel", b =>
@@ -104,7 +107,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasKey("CartId");
 
-                    b.ToTable("Carts", (string)null);
+                    b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.Category", b =>
@@ -126,7 +129,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasKey("category_id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.OrderDetails", b =>
@@ -155,16 +158,19 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasIndex("order_Id");
 
-                    b.ToTable("OrderDetails", (string)null);
+                    b.ToTable("OrderDetails");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.Orders", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("order_Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("order_Id"));
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -179,46 +185,13 @@ namespace BTL_WEBNC.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id");
+                    b.HasKey("order_Id");
 
-                    b.HasIndex("address_Id");
+                    b.HasIndex("Id");
 
                     b.HasIndex("user_Id");
 
-                    b.ToTable("Orders", (string)null);
-                });
-
-            modelBuilder.Entity("BTL_WEBNC.Models.Payment", b =>
-                {
-                    b.Property<int>("pay_id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("pay_id"));
-
-                    b.Property<DateTime>("created_at")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("order_Id")
-                        .HasMaxLength(50)
-                        .HasColumnType("int");
-
-                    b.Property<string>("payment_method")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.HasKey("pay_id");
-
-                    b.HasIndex("order_Id");
-
-                    b.ToTable("Payments", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.Product", b =>
@@ -265,7 +238,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasIndex("seller_Id");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.ProductSize", b =>
@@ -291,7 +264,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasIndex("Size_Id");
 
-                    b.ToTable("ProductSizes", (string)null);
+                    b.ToTable("ProductSizes");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.Seller", b =>
@@ -319,7 +292,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasIndex("user_Id");
 
-                    b.ToTable("Sellers", (string)null);
+                    b.ToTable("Sellers");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.Size", b =>
@@ -337,7 +310,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasKey("Size_Id");
 
-                    b.ToTable("Sizes", (string)null);
+                    b.ToTable("Sizes");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.User", b =>
@@ -591,7 +564,7 @@ namespace BTL_WEBNC.Migrations
                         .IsRequired();
 
                     b.HasOne("BTL_WEBNC.Models.Orders", "Order")
-                        .WithMany("OrderDetails")
+                        .WithMany()
                         .HasForeignKey("order_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -603,9 +576,9 @@ namespace BTL_WEBNC.Migrations
 
             modelBuilder.Entity("BTL_WEBNC.Models.Orders", b =>
                 {
-                    b.HasOne("BTL_WEBNC.Models.Address", "Address")
+                    b.HasOne("BTL_WEBNC.Models.Address", "address")
                         .WithMany()
-                        .HasForeignKey("address_Id")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -615,20 +588,9 @@ namespace BTL_WEBNC.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Address");
-
                     b.Navigation("User");
-                });
 
-            modelBuilder.Entity("BTL_WEBNC.Models.Payment", b =>
-                {
-                    b.HasOne("BTL_WEBNC.Models.Orders", "Orders")
-                        .WithMany()
-                        .HasForeignKey("order_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Orders");
+                    b.Navigation("address");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.Product", b =>
@@ -734,11 +696,6 @@ namespace BTL_WEBNC.Migrations
             modelBuilder.Entity("BTL_WEBNC.Models.CartModel", b =>
                 {
                     b.Navigation("CartDetails");
-                });
-
-            modelBuilder.Entity("BTL_WEBNC.Models.Orders", b =>
-                {
-                    b.Navigation("OrderDetails");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.Product", b =>

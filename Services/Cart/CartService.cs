@@ -71,5 +71,10 @@ namespace BTL_WEBNC.Services
         {
             return await _cartRepository.UpdateAddressAsync(updatedAddress);
         }
+
+        public async Task<(bool Success, string Message, int OrderId)> ConfirmCheckoutAsync(string userId, CheckoutRequest request)
+        {
+            return await _cartRepository.ConfirmCheckoutAsync(userId, request);
+        }
     }
 }
