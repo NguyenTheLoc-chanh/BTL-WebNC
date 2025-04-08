@@ -1,14 +1,24 @@
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BTL_WEBNC.Models
 {
-    // quản lí trang thái sản 
+    // Quản lý trạng thái hiển thị của sản phẩm
     public enum ProductStatus
     {
         Active,
         OutOfStock,
         Disabled
+    }
+
+    // Mới: Quản lý trạng thái phê duyệt của sản phẩm
+    public enum ProductApprovalStatus
+    {
+        Pending,   // Chờ duyệt
+        Approved,  // Đã duyệt
+        Rejected   // Từ chối
     }
 
     [Table("Products")]
@@ -23,12 +33,12 @@ namespace BTL_WEBNC.Models
         [Required]
         public int category_id { get; set; }
 
-        [Required(ErrorMessage ="Tên sản phẩm không được để trống!") ]
-        [Column(TypeName ="nvarchar")]
+        [Required(ErrorMessage = "Tên sản phẩm không được để trống!")]
+        [Column(TypeName = "nvarchar")]
         [StringLength(255)]
         public string Name { get; set; }
 
-        [Column(TypeName ="nvarchar(max)")]
+        [Column(TypeName = "nvarchar(max)")]
         public string? Description { get; set; }
 
         [Required]
@@ -44,17 +54,22 @@ namespace BTL_WEBNC.Models
         [Required]
         public ProductStatus Status { get; set; } = ProductStatus.Active;
 
+        // Thuộc tính mới: Trạng thái phê duyệt của sản phẩm
+        [Required]
+        public ProductApprovalStatus? ApprovalStatus { get; set; } = ProductApprovalStatus.Pending;
+
         [Required]
         [Column(TypeName = "datetime")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-        
+
         // Thiết lập quan hệ với Seller
         [ForeignKey("seller_Id")]
-        public virtual Seller Seller { get; set; }
+        public virtual Seller? Seller { get; set; }
 
         // Thiết lập quan hệ với Category
         [ForeignKey("category_id")]
-        public virtual Category Category { get; set; }
+        public virtual Category? Category { get; set; }
+
         public virtual ICollection<ProductSize> ProductSizes { get; set; } = new List<ProductSize>();
     }
 }

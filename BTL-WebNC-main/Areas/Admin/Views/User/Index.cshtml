@@ -73,6 +73,19 @@
                 <td>
                     <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-warning btn-sm">Sửa</a>
                     <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-danger btn-sm">Xóa</a>
+
+                    @if (user.SellerApprovalStatus == SellerApprovalStatus.Approved)
+                    {
+                        <form asp-action="ApproveUser" method="post" style="display:inline;">
+                            <input type="hidden" name="userId" value="@user.Id" />
+                            <button type="submit" class="btn btn-success btn-sm">Duyệt</button>
+                        </form>
+                        <form asp-action="RejectUser" method="post" style="display:inline;">
+                            <input type="hidden" name="userId" value="@user.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm">Từ chối</button>
+                        </form>
+                    }
+
                     <form asp-action="ToggleAccountStatus" method="post" style="display:inline;">
                         <input type="hidden" name="userId" value="@user.Id" />
                         <button type="submit" class="btn btn-secondary btn-sm">

@@ -3,6 +3,7 @@ using BTL_WEBNC.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,19 +12,19 @@ namespace BTL_WEBNC.Areas.Admin.Controllers
     [Area("Admin")]
     [Authorize(Roles = "Admin")] // Chỉ Admin mới được truy cập phần này
     [Route("Admin/[controller]/[action]")]
+    
     public class UserController : Controller
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        //public IActionResult Index()
-        //{
-        //    return View(); // Trả về view Index.cshtml trong Areas/Admin/Views/User/
-        //}
-        public UserController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+      
+        private readonly AppDBContext _dbContext;
+        public UserController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, AppDBContext dbContext)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _dbContext = dbContext; // Inject DbContext
         }
 
         // GET: /Admin/User/Index
@@ -179,6 +180,7 @@ namespace BTL_WEBNC.Areas.Admin.Controllers
             await _userManager.UpdateAsync(user);
             return RedirectToAction(nameof(Index));
         }
+
         public IActionResult PendingApproval()
         {
             return View(); // Trả về View PendingApproval.cshtml
@@ -196,7 +198,9 @@ namespace BTL_WEBNC.Areas.Admin.Controllers
         }
 
 
-        // phê duyệt
+        //// phê duyệt
+      
+
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
@@ -205,19 +209,40 @@ namespace BTL_WEBNC.Areas.Admin.Controllers
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return NotFound();
 
-            // Tạo role Seller nếu chưa có
+            // Tạo role "Seller" nếu chưa có
             if (!await _roleManager.RoleExistsAsync("Seller"))
             {
                 await _roleManager.CreateAsync(new IdentityRole("Seller"));
             }
 
-            // Phê duyệt người dùng thành Seller
+            await _userManager.AddToRoleAsync(user, "Seller");
             user.SellerApprovalStatus = SellerApprovalStatus.Approved;
-            user.Role = UserRole.Seller; // Dùng Enum trong mã nguồn
-            await _userManager.AddToRoleAsync(user, "Seller"); // Gán chuỗi "Seller" cho Identity
 
-            await _userManager.UpdateAsync(user);
-            return RedirectToAction(nameof(PendingRequests));
+            // Thêm bản ghi Seller vào bảng Sellers
+            var seller = new BTL_WEBNC.Models.Seller
+            {
+                user_Id = user.Id,
+                StoreName = user.StoreName ?? "Cửa hàng chưa có tên",
+                StoreLogo = null,
+                Status = SellerStatus.Active
+            };
+
+
+            try
+            {
+                _dbContext.Sellers.Add(seller);
+                await _dbContext.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Người dùng đã được phê duyệt thành người bán.";
+                //return RedirectToAction(nameof(PendingRequests));
+                return Ok(); // Trả về 200 OK, không cần chuyển hướng
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Lỗi khi phê duyệt người bán: " + ex.Message);
+                TempData["ErrorMessage"] = "Có lỗi xảy ra khi xử lý yêu cầu.";
+                return RedirectToAction(nameof(PendingRequests));
+            }
         }
 
 
@@ -232,7 +257,8 @@ namespace BTL_WEBNC.Areas.Admin.Controllers
 
             user.SellerApprovalStatus = SellerApprovalStatus.Rejected; // Cập nhật trạng thái "Từ chối"
             await _userManager.UpdateAsync(user); // Lưu thay đổi vào cơ sở dữ liệu
-            return RedirectToAction(nameof(PendingRequests)); // Quay lại danh sách yêu cầu chờ duyệt
+            return Ok(); // Trả về 200 OK, không cần chuyển hướng
+            //return RedirectToAction(nameof(PendingRequests)); // Quay lại danh sách yêu cầu chờ duyệt
         }
 
 

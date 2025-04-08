@@ -918,4 +918,5 @@ D:\BTL-WebNC-main\BTL-WebNC-main\obj\Debug\net8.0\refint\BTL_WEBNC.dll
 D:\BTL-WebNC-main\BTL-WebNC-main\obj\Debug\net8.0\BTL_WEBNC.pdb
 D:\BTL-WebNC-main\BTL-WebNC-main\obj\Debug\net8.0\BTL_WEBNC.genruntimeconfig.cache
 D:\BTL-WebNC-main\BTL-WebNC-main\obj\Debug\net8.0\ref\BTL_WEBNC.dll
+D:\BTL-WebNC-main\BTL-WebNC-main\obj\Debug\net8.0\BTL_WEBNC.sourcelink.json
 D:\BTL-WebNC-main\BTL-WebNC-main\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

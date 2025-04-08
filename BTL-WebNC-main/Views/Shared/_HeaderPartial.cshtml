@@ -28,6 +28,10 @@
                     var user = await UserManager.GetUserAsync(User);
                     var roles = await UserManager.GetRolesAsync(user);
                     bool isAdmin = roles.Contains("Admin"); // Kiểm tra xem người dùng có phải là Admin
+                    bool isSeller = roles.Contains("Seller"); // Kiểm tra xem người dùng có phải là người bán
+                    bool isCustomer = roles.Contains("Customer"); // Kiểm tra xem người dùng có phải là khách hàng không
+
+
 
                     <div class="dropdown">
                         <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
@@ -36,20 +40,38 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#">Tài khoản của tôi</a></li>
-                            <li><a class="dropdown-item" href="#">Địa chỉ của tôi</a></li>
-                            <li><a class="dropdown-item" href="#">Đơn mua</a></li>
+                            
+                            
+                                <li><a class="dropdown-item" href="#">Địa chỉ của tôi</a></li>
+                                <li><a class="dropdown-item" href="#">Đơn mua</a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Seller" asp-action="RegisterSeller">Trở thành người bán</a></li>
+
+                            
+
+
+
                             @if (isAdmin)
                             {
                                 <li><a class="dropdown-item"asp-controller="HomeAdmin" asp-action="Index">Quản lý sản phẩm</a></li>
                                 <li><a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="Index">Quản lý người dùng</a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="PendingRequests">Duyệt tài khoản</a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="PendingProducts">Duyệt sản phẩm</a></li>
+
+
+
 
                             }
-                            else
+                            @if (isSeller)
                             {
-                               <li><a class="dropdown-item" asp-area="Admin" asp-controller="Seller" asp-action="RegisterSeller">Trở thành người bán</a></li>
+                                <a class="dropdown-item"  asp-controller="Product" asp-action="CreateProduct">Thêm sản phẩm</a>
+                                <a class="dropdown-item" asp-controller="SellerProduct" asp-action="SellerProduct">
+                                    Sản phẩm của tôi
+                                </a>
 
-               
                             }
+                          
+
+                            
                             <li>
                                     <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
                                         <button type="submit" class="dropdown-item text-danger">Đăng xuất</button>

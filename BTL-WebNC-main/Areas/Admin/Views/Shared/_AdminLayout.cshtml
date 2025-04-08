@@ -18,8 +18,9 @@
         <ul class="sidebar-nav">
             <li><a asp-area="Admin" asp-controller="HomeAdmin" asp-action="Index">📦 Quản lý sản phẩm</a></li>
             <li><a asp-area="Admin" asp-controller="User" asp-action="Index" >👤 Quản lý người dùng</a></li>
-            <li><a asp-area="Admin" asp-controller="User" asp-action="PendingRequests">💬 Duyệt</a></li>
-            <li><a href="/Admin/Feedback">💬 Duyệt sản phẩm</a></li>
+            <li><a asp-area="Admin" asp-controller="User" asp-action="PendingRequests">💬 Duyệt tài khoản</a></li>
+            <li><a asp-area="Admin" asp-controller="Product" asp-action="PendingProducts">💬 Duyệt sản phẩm</a></li>
+
         </ul>
         <div class="sidebar-footer">
             <a class="logout"asp-action="Index" asp-controller="Home">Trở về trang chủ</a>

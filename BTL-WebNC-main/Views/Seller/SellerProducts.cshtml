@@ -1,0 +1,65 @@
+﻿@model IEnumerable<BTL_WEBNC.Models.Product>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Hoặc dùng layout Admin nếu có
+}
+
+<h2>Danh sách sản phẩm của bạn</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div id="success-alert" class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Tên sản phẩm</th>
+            <th>Giá</th>
+            <th>Trạng thái duyệt</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.Name</td>
+                <td>@string.Format("{0:N0} VNĐ", product.Price)</td>
+                <td>
+                    @if (product.ApprovalStatus.HasValue)
+                    {
+                        @if (product.ApprovalStatus.Value == ProductApprovalStatus.Approved)
+                        {
+                            <span>Đã duyệt</span>
+                        }
+                        else
+                        {
+                            <span>Chưa duyệt</span>
+                        }
+                    }
+                    else
+                    {
+                        <span>Không xác định</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        // Tự động ẩn thông báo sau 3 giây
+        setTimeout(function(){
+            var alertBox = document.getElementById("success-alert");
+            if (alertBox) {
+                alertBox.style.transition = "opacity 0.5s ease-out";
+                alertBox.style.opacity = 0;
+                setTimeout(function(){ alertBox.style.display = "none"; }, 500);
+            }
+        }, 3000);
+    </script>
+}

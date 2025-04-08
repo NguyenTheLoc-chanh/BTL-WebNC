@@ -30,9 +30,11 @@ namespace BTL_WEBNC.Models
         }
         // Ví dụ khai báo
         //public DbSet<Contact> Contacts { get; set; }
+        public DbSet<Seller> Sellers { get; set; }
+
         public DbSet<Category> Categories { get; set; }
         //public DbSet<User> Users { get; set; }
-        public DbSet<Seller> Sellers { get; set; }
+ 
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductSize>  ProductSizes{ get; set; }
         public DbSet<Size> Sizes { get; set; }

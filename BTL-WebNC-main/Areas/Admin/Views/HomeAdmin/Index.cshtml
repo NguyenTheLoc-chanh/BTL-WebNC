@@ -7,33 +7,67 @@
 
 <h2>Danh Sách Sản Phẩm</h2>
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
 <p>
     <a class="btn btn-primary" href="@Url.Action("Create", "HomeAdmin", new { area = "Admin" })">Thêm Sản Phẩm</a>
 </p>
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.First().Product_Id)</th>
-            <th>@Html.DisplayNameFor(model => model.First().Name)</th>
-            <th>@Html.DisplayNameFor(model => model.First().Price)</th>
-            <th>@Html.DisplayNameFor(model => model.First().Stock)</th>
-            <th>Hành động</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+<!-- Sử dụng class table-responsive của Bootstrap để tự động tạo thanh cuộn ngang -->
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
             <tr>
-                <td>@item.Product_Id</td>
-                <td>@item.Name</td>
-                <td>@item.Price</td>
-                <td>@item.Stock</td>
-                <td>
-                    <a class="btn btn-warning btn-sm" href="@Url.Action("Edit", "HomeAdmin", new { area = "Admin", id = item.Product_Id })">Edit</a>
-                    <a class="btn btn-danger btn-sm" href="@Url.Action("Delete", "HomeAdmin", new { area = "Admin", id = item.Product_Id })">Delete</a>
-                </td>
+                <th>@Html.DisplayNameFor(model => model.First().Product_Id)</th>
+                <th>@Html.DisplayNameFor(model => model.First().Name)</th>
+                <th>@Html.DisplayNameFor(model => model.First().Description)</th>
+                <th>@Html.DisplayNameFor(model => model.First().Price)</th>
+                <th>@Html.DisplayNameFor(model => model.First().Stock)</th>
+                <th>Ảnh</th>
+                <th>@Html.DisplayNameFor(model => model.First().Status)</th>
+                <th>@Html.DisplayNameFor(model => model.First().ApprovalStatus)</th>
+                <th>@Html.DisplayNameFor(model => model.First().CreatedAt)</th>
+                <th>Nhà cung cấp</th>
+                <th>Danh mục</th>
+                <th>Hành động</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Product_Id</td>
+                    <td>@item.Name</td>
+                    <td>@item.Description</td>
+                    <td>@item.Price</td>
+                    <td>@item.Stock</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.Images))
+                        {
+                            <img src="@Url.Content(item.Images)" alt="Ảnh sản phẩm" style="width:80px; height:auto;" />
+                        }
+                    </td>
+                    <td>@item.Status</td>
+                    <td>@item.ApprovalStatus</td>
+                    <td>@item.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@(item.Seller != null ? item.Seller.StoreName : "")</td>
+                    <td>@(item.Category != null ? item.Category.category_Name : "")</td>
+                    <td>
+                        <a class="btn btn-warning btn-sm" href="@Url.Action("Edit", "HomeAdmin", new { area = "Admin", id = item.Product_Id })">Edit</a>
+                        <a class="btn btn-danger btn-sm" href="@Url.Action("Delete", "HomeAdmin", new { area = "Admin", id = item.Product_Id })">Delete</a>
+                        @if (item.ApprovalStatus == 0)
+                        {
+                            <a class="btn btn-success btn-sm" href="@Url.Action("ConfirmProduct", "HomeAdmin", new { area = "Admin", id = item.Product_Id })">Xác nhận</a>
+                            <a class="btn btn-danger btn-sm" href="@Url.Action("RejectProduct", "HomeAdmin", new { area = "Admin", id = item.Product_Id })">Từ chối</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

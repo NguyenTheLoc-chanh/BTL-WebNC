@@ -1,6 +1,6 @@
 using BTL_WEBNC.Models;
-using BTL_WEBNC.Models.ViewModels;
 using BTL_WEBNC.Repositories;
+using BTL_WEBNC.ViewModel;
 
 namespace BTL_WEBNC.Services
 {
