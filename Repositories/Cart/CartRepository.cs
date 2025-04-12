@@ -124,7 +124,8 @@ namespace BTL_WEBNC.Repositories
                 ProductName = cd.Product.Name,
                 ProductPrice = cd.Product.Price,
                 Quantity = cd.Quantity,
-                ImageUrl = cd.Product.Images
+                ImageUrl = cd.Product.Images,
+                SellerId = cd.Product.Seller.seller_Id,
             })
             .ToListAsync();
         }
@@ -244,6 +245,7 @@ namespace BTL_WEBNC.Repositories
                 var order = new Orders
                 {
                     user_Id = userId,
+                    seller_Id = request.SellerId,
                     address_Id = request.AddressId,
                     total_price = request.TotalAmount,
                     Status = OrderStatus.Pending

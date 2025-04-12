@@ -4,12 +4,14 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using BTL_WEBNC.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BTL_WEBNC.Admin.Users
 {
+    [Authorize(Roles ="Admin")]
     public class SetPasswordModel : PageModel
     {
         private readonly UserManager<User> _userManager;

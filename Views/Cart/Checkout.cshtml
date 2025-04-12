@@ -67,7 +67,7 @@
                         <tbody>
                             @foreach (var item in Model)
                             {
-                                <tr data-id="@item.ProductID">
+                                <tr data-id="@item.ProductID" data-sellerid="@item.SellerId">
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <img src="@item.ImageUrl" alt="@item.ProductName" style="width: 60px; height: 60px; object-fit: cover;" class="me-3">
@@ -208,6 +208,7 @@
             const formData = {
                 CartItemIds: @Html.Raw(Json.Serialize(Model.Select(x => x.CartDetailId))),
                 AddressId: @(ViewBag.SelectedAddress?.Id ?? 0),
+                SellerId: $('tr[data-id]').data('sellerid'),
                 TotalAmount: @(Model.Sum(p => p.ProductPrice * p.Quantity) - 20000),
                 PaymentMethod: $('input[name="paymentMethod"]:checked').val(),
                 CartItems: @Html.Raw(Json.Serialize(Model.Select(m => new {

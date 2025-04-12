@@ -1,0 +1,54 @@
+@model IEnumerable<BTL_WEBNC.Models.Orders>
+
+@{
+    ViewData["Title"] = "Order History";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Đơn hàng</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="text-white" style="background-image: linear-gradient(0, #fe6433, #f53e2d);">
+                <tr>
+                    <th>#</th>
+                    <th>Mã đơn hàng</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    int index = 1;
+                    foreach (var order in Model)
+                    {
+                        <tr class="text-center">
+                            <td>@index</td>
+                            <td>@order.Id</td>
+                            <td>@order.total_price.ToString("N0")đ</td>
+                            <td>
+                                <span class="badge @(order.Status == 0 ? "bg-success" : "bg-warning")">
+                                    @order.Status
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <a asp-controller="OrderHistory" asp-action="OrderDetails" asp-route-id="@order.Id" class="btn btn-success btn-sm d-inline-block">
+                                    Xem chi tiết
+                                </a>
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="text-center">No orders found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

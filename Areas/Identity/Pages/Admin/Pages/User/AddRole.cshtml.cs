@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using BTL_WEBNC.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BTL_WEBNC.Admin.Users
 {
+    [Authorize(Roles ="Admin")]
     public class AddRoleModel : PageModel
     {
         private readonly UserManager<User> _userManager;

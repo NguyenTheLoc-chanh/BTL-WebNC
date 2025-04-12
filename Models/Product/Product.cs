@@ -7,7 +7,15 @@ namespace BTL_WEBNC.Models
     {
         Active,
         OutOfStock,
-        Disabled
+        Disabled,
+        NoActive
+    }
+    // Mới: Quản lý trạng thái phê duyệt của sản phẩm
+    public enum ProductApprovalStatus
+    {
+        Pending,   // Chờ duyệt
+        Approved,  // Đã duyệt
+        Rejected   // Từ chối
     }
 
     [Table("Products")]
@@ -42,6 +50,10 @@ namespace BTL_WEBNC.Models
 
         [Required]
         public ProductStatus Status { get; set; } = ProductStatus.Active;
+
+        // Thuộc tính mới: Trạng thái phê duyệt của sản phẩm
+        [Required]
+        public ProductApprovalStatus? ApprovalStatus { get; set; } = ProductApprovalStatus.Pending;
 
         [Required]
         [Column(TypeName = "datetime")]

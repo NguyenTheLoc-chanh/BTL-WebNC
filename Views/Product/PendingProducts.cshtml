@@ -1,0 +1,79 @@
+@model IEnumerable<BTL_WEBNC.Models.Product>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<h2 class="text-center my-4">Danh sách sản phẩm chờ duyệt</h2>
+@{
+    ViewData["Title"] = "Quản Lý Sản Phẩm";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-dark text-center">
+            <tr>
+                <th scope="col">Tên sản phẩm</th>
+                <th scope="col">Mô tả</th>
+                <th scope="col">Giá</th>
+                <th scope="col">Hình ảnh</th>
+                <th scope="col">Trạng thái duyệt</th>
+                <th scope="col">Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>@product.Name</td>
+                    <td>@product.Description</td>
+                    <td>@product.Price.ToString("N0") VNĐ</td>
+                    <td class="text-center">
+                        @if (!string.IsNullOrEmpty(product.Images))
+                        {
+                            <img src="@product.Images" alt="Ảnh sản phẩm" class="img-thumbnail" style="width:100px; height: auto;" />
+                        }
+                        else
+                        {
+                            <span class="text-muted">Chưa có ảnh</span>
+                        }
+                    </td>
+                    <td class="text-center">
+                        @if (product.ApprovalStatus == ProductApprovalStatus.Pending)
+                        {
+                            <span class="badge bg-warning text-dark">Chờ duyệt</span>
+                        }
+                        else if (product.ApprovalStatus == ProductApprovalStatus.Approved)
+                        {
+                            <span class="badge bg-success">Đã duyệt</span>
+                        }
+                        else if (product.ApprovalStatus == ProductApprovalStatus.Rejected)
+                        {
+                            <span class="badge bg-danger">Từ chối</span>
+                        }
+                    </td>
+                    <td class="text-center">
+                        <form asp-action="ApproveProduct" method="post" class="d-inline">
+                            <input type="hidden" name="productId" value="@product.Product_Id" />
+                            <button type="submit" class="btn btn-success btn-sm">
+                                <i class="fas fa-check"></i> Duyệt
+                            </button>
+                        </form>
+                        <form asp-action="RejectProduct" method="post" class="d-inline">
+                            <input type="hidden" name="productId" value="@product.Product_Id" />
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fas fa-times"></i> Từ chối
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -96,6 +96,18 @@ namespace BTL_WEBNC.Areas.Identity.Pages.Account
                 }
                 if (result.Succeeded)
                 {
+                    var user = await _userManager.FindByNameAsync(Input.UsernameOrEmail) 
+                       ?? await _userManager.FindByEmailAsync(Input.UsernameOrEmail);
+
+                    if (user != null)
+                    {
+                        // Kiểm tra nếu user thuộc vai trò Admin
+                        if (await _userManager.IsInRoleAsync(user, "Admin"))
+                        {
+                            _logger.LogInformation("Admin logged in.");
+                            return RedirectToAction("Index", "HomeAdmin", new { area = "Admin" });
+                        }
+                    }
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }

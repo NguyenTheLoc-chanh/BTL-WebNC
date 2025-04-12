@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets\\BTL_WEBNC.bundle.scp.css"
     },
     {
+      "Id": "F:\\Fileword\\CNPM\\BTL_WEBNC\\wwwroot\\css\\admin.css",
+      "PackagePath": "staticwebassets\\css\\admin.css"
+    },
+    {
       "Id": "F:\\Fileword\\CNPM\\BTL_WEBNC\\wwwroot\\css\\home.css",
       "PackagePath": "staticwebassets\\css\\home.css"
     },

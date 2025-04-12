@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "q52WfrUElTyGVUu9jb1GWF8GIMb5z/KsZoFDslh/TXc=",
+  "Hash": "qJbn+zByS0xz9AR5nSzvmwRmbv39MH9sUa/Chs4CKOw=",
   "Source": "BTL_WEBNC",
   "BasePath": "_content/BTL_WEBNC",
   "Mode": "Default",
@@ -1193,6 +1193,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "F:\\Fileword\\CNPM\\BTL_WEBNC\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\BTL_WEBNC.bundle.scp.css"
+    },
+    {
+      "Identity": "F:\\Fileword\\CNPM\\BTL_WEBNC\\wwwroot\\css\\admin.css",
+      "SourceId": "BTL_WEBNC",
+      "SourceType": "Discovered",
+      "ContentRoot": "F:\\Fileword\\CNPM\\BTL_WEBNC\\wwwroot\\",
+      "BasePath": "_content/BTL_WEBNC",
+      "RelativePath": "css/admin.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\admin.css"
     },
     {
       "Identity": "F:\\Fileword\\CNPM\\BTL_WEBNC\\wwwroot\\css\\home.css",

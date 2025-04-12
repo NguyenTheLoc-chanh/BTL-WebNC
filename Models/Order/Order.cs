@@ -14,7 +14,6 @@ namespace BTL_WEBNC.Models
     public class Orders
     {
         [Key] 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]
@@ -23,12 +22,18 @@ namespace BTL_WEBNC.Models
 
         [Required]
         public string user_Id { get; set; }
+        
+        [Required]
+        public string seller_Id { get; set; }
 
         [Required]
         public int address_Id { get; set; }
 
         [Required]
         public OrderStatus Status { get; set; } = OrderStatus.Pending;
+
+        [ForeignKey("seller_Id")]
+        public virtual Seller Seller { get; set; }
 
         // Thiết lập quan hệ với User
         [ForeignKey("user_Id")]

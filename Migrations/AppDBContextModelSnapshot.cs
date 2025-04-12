@@ -53,7 +53,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasIndex("user_Id");
 
-                    b.ToTable("AddressUser", (string)null);
+                    b.ToTable("AddressUser");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.CartDetails", b =>
@@ -84,7 +84,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasIndex("Size_Id");
 
-                    b.ToTable("CartDetails", (string)null);
+                    b.ToTable("CartDetails");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.CartModel", b =>
@@ -104,7 +104,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasKey("CartId");
 
-                    b.ToTable("Carts", (string)null);
+                    b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.Category", b =>
@@ -126,7 +126,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasKey("category_id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.OrderDetails", b =>
@@ -155,7 +155,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasIndex("order_Id");
 
-                    b.ToTable("OrderDetails", (string)null);
+                    b.ToTable("OrderDetails");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.Orders", b =>
@@ -172,6 +172,10 @@ namespace BTL_WEBNC.Migrations
                     b.Property<int>("address_Id")
                         .HasColumnType("int");
 
+                    b.Property<string>("seller_Id")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<double>("total_price")
                         .HasColumnType("float");
 
@@ -183,9 +187,11 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasIndex("address_Id");
 
+                    b.HasIndex("seller_Id");
+
                     b.HasIndex("user_Id");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.Payment", b =>
@@ -218,7 +224,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasIndex("order_Id");
 
-                    b.ToTable("Payments", (string)null);
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.Product", b =>
@@ -228,6 +234,9 @@ namespace BTL_WEBNC.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Product_Id"));
+
+                    b.Property<int>("ApprovalStatus")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime");
@@ -265,7 +274,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasIndex("seller_Id");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.ProductSize", b =>
@@ -291,7 +300,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasIndex("Size_Id");
 
-                    b.ToTable("ProductSizes", (string)null);
+                    b.ToTable("ProductSizes");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.Seller", b =>
@@ -319,7 +328,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasIndex("user_Id");
 
-                    b.ToTable("Sellers", (string)null);
+                    b.ToTable("Sellers");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.Size", b =>
@@ -337,7 +346,7 @@ namespace BTL_WEBNC.Migrations
 
                     b.HasKey("Size_Id");
 
-                    b.ToTable("Sizes", (string)null);
+                    b.ToTable("Sizes");
                 });
 
             modelBuilder.Entity("BTL_WEBNC.Models.User", b =>
@@ -609,6 +618,12 @@ namespace BTL_WEBNC.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BTL_WEBNC.Models.Seller", "Seller")
+                        .WithMany()
+                        .HasForeignKey("seller_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BTL_WEBNC.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("user_Id")
@@ -616,6 +631,8 @@ namespace BTL_WEBNC.Migrations
                         .IsRequired();
 
                     b.Navigation("Address");
+
+                    b.Navigation("Seller");
 
                     b.Navigation("User");
                 });

@@ -1,0 +1,92 @@
+@model BTL_WEBNC.Models.Orders
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Chi tiết đơn hàng</h2>
+
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white" style="background-image: linear-gradient(0, #fe6433, #f53e2d);">
+            Thông tin đơn hàng
+        </div>
+        <div class="card-body">
+            <p><strong>Mã đơn hàng:</strong> @Model.Id</p>
+            @* <p><strong>Ngày tạo:</strong> @Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p> *@
+            <p><strong>Tổng tiền:</strong> @Model.total_price.ToString("N0")đ</p>
+            <p><strong>Trạng thái:</strong>
+                @if (Model.Status == OrderStatus.Completed)
+                {
+                    <span class="badge bg-success">Hoàn thành</span>
+                }
+                else if (Model.Status == OrderStatus.Pending)
+                {
+                    <span class="badge bg-warning">Đang xử lý</span>
+                }else if(Model.Status == OrderStatus.Confirmed)
+                {
+                    <span class="badge bg-info">Đã xác nhận</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">Đã hủy</span>
+                }
+            </p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-secondary text-white" style="background-image: linear-gradient(0, #fe6433, #f53e2d);">
+            Danh sách sản phẩm
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-dark text-center">
+                        <tr>
+                            <th>#</th>
+                            <th>Tên sản phẩm</th>
+                            <th>Hình ảnh</th>
+                            <th>Số lượng</th>
+                            <th>Giá</th>
+                            <th>Tổng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.OrderDetails != null && Model.OrderDetails.Any())
+                        {
+                            int index = 1;
+                            foreach (var item in Model.OrderDetails)
+                            {
+                                <tr>
+                                    <td class="text-center">@index</td>
+                                    <td>@item.Product.Name</td>
+                                    <td class="text-center">
+                                        @if (!string.IsNullOrEmpty(item.Product.Images))
+                                        {
+                                            <img src="@Url.Content(item.Product.Images)" alt="Ảnh sản phẩm" style="width:80px; height:auto;" />
+                                        }
+                                    </td>
+                                    <td class="text-center">@item.Quantity</td>
+                                    <td class="text-end">@item.Price.ToString("N0")đ</td>
+                                    <td class="text-end">@((item.Quantity * item.Price).ToString("N0"))đ</td>
+                                </tr>
+                                index++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center">Không có sản phẩm nào trong đơn hàng.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 text-center">
+        <a asp-action="Index" class="btn btn-secondary d-inline-block" style="background-image: linear-gradient(0, #fe6433, #f53e2d);">Quay lại danh sách đơn hàng</a>
+    </div>
+</div>

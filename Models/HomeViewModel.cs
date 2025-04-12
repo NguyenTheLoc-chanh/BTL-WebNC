@@ -31,6 +31,7 @@ namespace BTL_WEBNC.Models.ViewModels
         public string ProductName { get; set; }
         public float ProductPrice { get; set; }
         public string ImageUrl { get; set; }
+        public string SellerId { get; set; }
     }
 
     public class CartDetailProductModel
@@ -44,6 +45,7 @@ namespace BTL_WEBNC.Models.ViewModels
     public class CheckoutRequest
     {
         public List<int> CartItemIds { get; set; }
+        public string SellerId { get; set; }
         public int AddressId { get; set; }
         public float TotalAmount { get; set; }
         public string PaymentMethod { get; set; }
@@ -55,6 +57,22 @@ namespace BTL_WEBNC.Models.ViewModels
         public int ProductId { get; set; }
         public int Quantity { get; set; }
         public float Price { get; set; }
+    }
+
+    //Quản lý sản phẩm Seller
+    public class ProductManagementViewModel
+    {
+        public int Product_Id { get; set; }
+        public string Name { get; set; }
+        public string? Description { get; set; }
+        public float Price { get; set; }
+        public int Stock { get; set; }
+        public string? Images { get; set; }
+        public ProductStatus Status { get; set; }
+        public ProductApprovalStatus ApprovalStatus { get; set; }
+        public string seller_Id { get; set; }
+        public int category_id { get; set; }
+        public string CategoryName { get; set; }
     }
 
 }

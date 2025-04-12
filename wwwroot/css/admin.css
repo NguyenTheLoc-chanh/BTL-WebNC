@@ -1,0 +1,146 @@
+/* Reset cơ bản */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    position: fixed;
+    top: 0; /* Gắn sát phía trên */
+    left: 0;
+    bottom: 0;
+    background-color: #FFE0B2; /* Màu cam nhạt */
+    color: #333; /* Màu chữ tối để tương phản */
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+    .sidebar-header h2 {
+        margin: 0;
+        font-size: 22px;
+    }
+
+.sidebar-nav {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 0; /* Đưa menu sát phần đầu */
+}
+
+    .sidebar-nav li {
+        margin-bottom: 10px;
+    }
+
+        .sidebar-nav li a {
+            color: #333;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+            .sidebar-nav li a:hover {
+                text-decoration: underline;
+            }
+
+/* Sidebar Footer cho nút đăng xuất */
+.sidebar-footer {
+    margin-top: auto;
+    text-align: center;
+}
+
+    .sidebar-footer .logout {
+        background-color: #FFB74D; /* Màu cam đậm hơn để nổi bật */
+        color: #333;
+        padding: 8px 16px;
+        text-decoration: none;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+        .sidebar-footer .logout:hover {
+            background-color: #FFA726;
+        }
+
+/* Main Content */
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+}
+
+/* Header của nội dung chính */
+.header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-bottom: 20px;
+}
+
+    .header .logout-btn {
+        background-color: #FFB74D;
+        color: #333;
+        padding: 8px 16px;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+
+        .header .logout-btn:hover {
+            background-color: #FFA726;
+        }
+
+/* Nội dung chính */
+.content {
+    padding-top: 10px;
+}
+.badge {
+    background-color: transparent;
+    color: inherit;
+}
+.badge {
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Vai trò */
+.role-seller {
+    background-color: #17a2b8; /* Màu xanh nhạt */
+    color: white;
+}
+
+.role-customer {
+    background-color: #007bff; /* Màu xanh đậm */
+    color: white;
+}
+
+.role-admin {
+    background-color: #343a40; /* Màu đen */
+    color: white;
+}
+
+/* Trạng thái */
+.status-pending {
+    background-color: #ffc107; /* Màu vàng */
+    color: black;
+}
+
+.status-approved {
+    background-color: #28a745; /* Màu xanh lá */
+    color: white;
+}
+
+.status-rejected {
+    background-color: #dc3545; /* Màu đỏ */
+    color: white;
+}

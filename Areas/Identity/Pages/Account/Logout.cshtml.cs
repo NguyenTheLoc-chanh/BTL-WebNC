@@ -34,8 +34,7 @@ namespace BTL_WEBNC.Areas.Identity.Pages.Account
             }
             else
             {
-                returnUrl = Url.Content("~/");
-                return LocalRedirect(returnUrl);
+                return RedirectToAction("Index", "Home");
             }
         }
     }

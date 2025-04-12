@@ -147,11 +147,11 @@ namespace BTL_WEBNC.Controllers
 
         public class AddressDto
         {
-            public string FullName { get; set; }
-            public string PhoneNumber { get; set; }
-            public string StreetAddress { get; set; }
+            public required string FullName { get; set; }
+            public required string PhoneNumber { get; set; }
+            public required string StreetAddress { get; set; }
             public bool IsDefault { get; set; }
-            public string UserId { get; set; }
+            public required string UserId { get; set; }
         }
 
         [HttpPost]

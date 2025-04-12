@@ -1,0 +1,280 @@
+@model IEnumerable<BTL_WEBNC.Models.Orders>
+@{
+    ViewData["Title"] = "Seller - Quản lý sản phẩm";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="d-flex justify-content-between align-items-center mt-3">
+    <h1>Quản lý đơn hàng</h1>
+</div>
+<div class="card mt-4"></div>
+    <div class="card-header text-white" style="background-image: linear-gradient(0, #fe6433, #f53e2d);">
+        <h5 class="mb-0">Danh sách đơn hàng</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Mã đơn hàng</th>
+                        @* <th>Khách hàng</th> *@
+                        @* <th>Ngày đặt</th> *@
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        int index = 1;
+                        foreach (var order in Model)
+                        {
+                            <tr>
+                                <td>@index</td>
+                                <td>@order.Id</td>
+                                @* <td>@order.CustomerName</td> *@
+                                @* <td>@order.OrderDate.ToString("dd/MM/yyyy")</td> *@
+                                <td>@order.total_price.ToString("N0")đ</td>
+                                <td>
+                                    @if (order.Status == OrderStatus.Pending)
+                                    {
+                                        <span class="badge bg-warning text-dark">Chờ xử lý</span>
+                                    }
+                                    else if (order.Status == OrderStatus.Completed)
+                                    {
+                                        <span class="badge bg-success">Hoàn thành</span>
+                                    }
+                                    else if (order.Status == OrderStatus.Confirmed)
+                                    {
+                                        <span class="badge bg-danger">Đã xác nhận</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <button class="btn btn-info btn-sm" onclick="viewOrderDetails(@order.Id)">
+                                            Xem chi tiết
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger delete-btn" data-id="@order.Id" data-bs-toggle="modal" data-bs-target="#deleteModal">Hủy</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            index++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">Không có đơn hàng nào.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal hiển thị chi tiết đơn hàng -->
+<div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderDetailsModalLabel">Chi tiết đơn hàng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="orderDetailsContent">
+                    <!-- Nội dung chi tiết đơn hàng sẽ được tải bằng AJAX -->
+                    <p class="text-center text-muted">Đang tải chi tiết đơn hàng...</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" id="confirmOrderBtn" class="btn btn-primary">Xác nhận đơn hàng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal xác nhận hủy -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Xác nhận hủy đơn hàng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc chắn muốn hủy đơn hàng này không?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" id="confirmDeleteBtn" class="btn btn-danger">Hủy đơn hàng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    /* Hiệu ứng slide-in từ bên phải */
+    .slide-in {
+        animation: slideIn 0.5s ease-out;
+    }
+
+    @@keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    /* Tùy chỉnh giao diện thông báo */
+    .alert {
+        font-size: 1rem;
+        font-weight: 500;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+</style>
+@section Scripts {
+    <script>
+        let currentOrderId = null;
+        function viewOrderDetails(orderId) {
+            currentOrderId = orderId;
+            // Hiển thị modal
+            const orderDetailsModal = new bootstrap.Modal(document.getElementById("orderDetailsModal"));
+            orderDetailsModal.show();
+
+            // Hiển thị trạng thái đang tải
+            const orderDetailsContent = document.getElementById("orderDetailsContent");
+            orderDetailsContent.innerHTML = `<p class="text-center text-muted">Đang tải chi tiết đơn hàng...</p>`;
+
+            // Gửi yêu cầu AJAX để lấy thông tin chi tiết đơn hàng
+            fetch(`/api/OrderManagement/order-details/${orderId}`,{
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        console.log(data.data);
+                        // Hiển thị thông tin chi tiết đơn hàng
+                        const order = data.data;
+                        let detailsHtml = `
+                            <p><strong>Mã đơn hàng:</strong> ${order.id}</p>
+                            <p><strong>Tổng tiền:</strong> ${order.total_price.toLocaleString()} VNĐ</p>
+                            <p><strong>Trạng thái:</strong> ${
+                                order.status === 0
+                                    ? '<span class="badge bg-warning">Chờ xác nhận</span>'
+                                    : order.Status === 1
+                                    ? '<span class="badge bg-success text-dark">Hoàn thành</span>'
+                                    : '<span class="badge bg-danger">Đã xác nhận</span>'
+                            }</p>
+                            <h5 class="mt-4">Danh sách sản phẩm</h5>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Tên sản phẩm</th>
+                                        <th>Số lượng</th>
+                                        <th>Giá</th>
+                                        <th>Tổng</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+
+                        order.orderDetails.forEach((item, index) => {
+                            detailsHtml += `
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td>${item.name}</td>
+                                    <td>${item.quantity}</td>
+                                    <td>${item.price.toLocaleString()} VNĐ</td>
+                                    <td>${(item.quantity * item.price).toLocaleString()} VNĐ</td>
+                                </tr>
+                            `;
+                        });
+
+                        detailsHtml += `
+                                </tbody>
+                            </table>
+                        `;
+
+                        orderDetailsContent.innerHTML = detailsHtml;
+                        const confirmOrderBtn = document.getElementById("confirmOrderBtn");
+                        if (order.status === 0) {
+                            confirmOrderBtn.style.display = "inline-block"; // Hiển thị nút nếu status = 0
+                        } else {
+                            confirmOrderBtn.style.display = "none"; // Ẩn nút nếu status khác 0
+                        }
+                    } else {
+                        orderDetailsContent.innerHTML = `<p class="text-center text-danger">${data.message}</p>`;
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    orderDetailsContent.innerHTML = `<p class="text-center text-danger">Không thể tải chi tiết đơn hàng. Lỗi: ${error.message}</p>`;
+                });
+        }
+
+        document.getElementById("confirmOrderBtn").addEventListener("click", function () {
+            if (!currentOrderId) return;
+
+            fetch(`/api/OrderManagement/confirm-order/${currentOrderId}`, {
+                method: "PUT",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response => {
+                if (!response.json) {
+                    throw new Error(`Lỗi HTTP: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Cập nhật giao diện hoặc reload
+                    alert("Đơn hàng đã được xác nhận thành công!");
+                    location.reload(); // Reload lại trang để cập nhật trạng thái
+                } else {
+                    alert(`Lỗi: ${data.message}`);
+                }
+            })
+            .catch(error => {
+                console.error("Xác nhận đơn hàng lỗi:", error);
+                alert("Xảy ra lỗi khi xác nhận đơn hàng.");
+            });
+        });
+        // Tự động ẩn thông báo sau 5 giây
+        setTimeout(() => {
+            const successMessage = document.getElementById("successMessage");
+            if (successMessage) {
+                successMessage.classList.remove("slide-in");
+                successMessage.classList.add("fade-out");
+                setTimeout(() => successMessage.remove(), 500); // Xóa phần tử sau khi animation kết thúc
+            }
+        }, 5000);
+    </script>
+}

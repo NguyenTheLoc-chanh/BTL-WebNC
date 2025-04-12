@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BTL_WEBNC.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20250405052305_AddOrderDetailsNavigation")]
-    partial class AddOrderDetailsNavigation
+    [Migration("20250412024807_UpdateDatabase1")]
+    partial class UpdateDatabase1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -175,6 +175,10 @@ namespace BTL_WEBNC.Migrations
                     b.Property<int>("address_Id")
                         .HasColumnType("int");
 
+                    b.Property<string>("seller_Id")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<double>("total_price")
                         .HasColumnType("float");
 
@@ -185,6 +189,8 @@ namespace BTL_WEBNC.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("address_Id");
+
+                    b.HasIndex("seller_Id");
 
                     b.HasIndex("user_Id");
 
@@ -231,6 +237,9 @@ namespace BTL_WEBNC.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Product_Id"));
+
+                    b.Property<int>("ApprovalStatus")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime");
@@ -612,6 +621,12 @@ namespace BTL_WEBNC.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BTL_WEBNC.Models.Seller", "Seller")
+                        .WithMany()
+                        .HasForeignKey("seller_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BTL_WEBNC.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("user_Id")
@@ -619,6 +634,8 @@ namespace BTL_WEBNC.Migrations
                         .IsRequired();
 
                     b.Navigation("Address");
+
+                    b.Navigation("Seller");
 
                     b.Navigation("User");
                 });

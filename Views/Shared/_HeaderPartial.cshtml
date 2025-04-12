@@ -25,15 +25,26 @@
                         <a href="#" class="text-white text-decoration-none"><i class="far fa-question-circle"></i> Trợ giúp</a>
                     </div>
                     @if(SignInManager.IsSignedIn(User)){
+                        var roles = await UserManager.GetRolesAsync(await UserManager.GetUserAsync(User));
                         <div class="dropdown">
                             <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                 <img src="https://graph.facebook.com/1036060760144432/picture?width=40&height=40" class="rounded-circle" width="30" height="30">
                                 @UserManager.GetUserName(User)
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Tài khoản của tôi</a></li>
-                                <li><a class="dropdown-item" href="#">Địa chỉ của tôi</a></li>
-                                <li><a class="dropdown-item" href="#">Đơn mua</a></li>
+                                @if (roles.Contains("Seller"))
+                                {
+                                    <li><a class="dropdown-item" asp-area="Identity" asp-page="/Seller/Pages/ProductManagement/Index">Quản lý sản phẩm</a></li>
+                                    <li><a class="dropdown-item" href="/api/OrderManagement/orders">Quản lý đơn hàng</a></li>
+                                    <li><a class="dropdown-item" href="#">Xem Shop</a></li>
+                                }
+                                @if(roles.Contains("Admin"))
+                                {
+                                    <li><a class="dropdown-item" asp-controller="HomeAdmin" asp-action="Index">Admin Panel</a></li>
+                                    <li><a class="dropdown-item" asp-area="Identity" asp-page="/Admin/Pages/Role/Index">Quản lý tài khoản</a></li>
+                                    <li><a class="dropdown-item" asp-area="Identity" asp-page="/Admin/Pages/User/Index">Quản lý người dùng</a></li>
+                                }
+                                <li><a class="dropdown-item" asp-controller="OrderHistory" asp-action="Index">Đơn mua</a></li>
                                 <li>
                                     <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
                                         <button type="submit" class="dropdown-item text-danger">Đăng xuất</button>
@@ -121,8 +132,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <div class="home-product-item__img" style="background-image: url(${product.images});"></div>
                                 <h4 class="home-product-item__name">${product.name}</h4>
                                 <div class="home-product-item__price">
-                                    <span class="home-product-item__price-old">${product.price.toLocaleString()}đ</span>
-                                    <span class="home-product-item__price-current">999.000đ</span>
+                                    <span class="home-product-item__price-current">${product.price.toLocaleString()}đ</span>
+                                    @* <span class="home-product-item__price-current">999.000đ</span> *@
                                 </div>
                                 <div class="home-product-item__action">
                                     <span class="home-product-item__like"><i class="far fa-heart"></i></span>

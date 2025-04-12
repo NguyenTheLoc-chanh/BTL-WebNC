@@ -1,0 +1,135 @@
+@page "/seller/create-product"
+@model BTL_WEBNC.ProductManagement.Sellers.CreateModel
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Thêm Sản Phẩm Mới</h2>
+    <form method="post" class="shadow p-4 rounded bg-light">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label asp-for="Product.Name" class="form-label">Tên sản phẩm</label>
+                <input asp-for="Product.Name" class="form-control" required />
+                <span asp-validation-for="Product.Name" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Product.Price" class="form-label">Giá</label>
+                <input asp-for="Product.Price" class="form-control" type="number" required />
+                <span asp-validation-for="Product.Price" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Product.Description" class="form-label">Mô tả</label>
+            <textarea asp-for="Product.Description" class="form-control" rows="3" required></textarea>
+            <span asp-validation-for="Product.Description" class="text-danger"></span>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label asp-for="Product.Stock" class="form-label">Số lượng</label>
+                <input asp-for="Product.Stock" class="form-control" type="number" required />
+                <span asp-validation-for="Product.Stock" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Product.category_id" class="form-label">Danh mục</label>
+                <select asp-for="Product.category_id" class="form-select" required>
+                    <option value="">-- Chọn danh mục --</option>
+                    @foreach (var category in Model.Categories)
+                    {
+                        <option value="@category.category_id">@category.category_Name</option>
+                    }
+                </select>
+                <span asp-validation-for="Product.category_id" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Product.Images" class="form-label">Hình ảnh</label>
+            <input asp-for="Product.Images" class="form-control" type="text" placeholder="Nhập URL hình ảnh" />
+            <span asp-validation-for="Product.Images" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Chọn Size</label>
+            <div class="d-flex">
+                <select id="sizeDropdown" class="form-select me-2">
+                    <option value="">-- Chọn size --</option>
+                    @foreach (var size in Model.Sizes)
+                    {
+                        <option value="@size.Size_Id">@size.Name</option>
+                    }
+                </select>
+                <button type="button" id="addSelectedSizeBtn" class="btn btn-secondary">Thêm</button>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Danh sách Size và Số lượng</label>
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>Size</th>
+                        <th>Số lượng</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="selectedSizeTableBody">
+                    <!-- Các size được chọn sẽ hiển thị tại đây -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Lưu sản phẩm</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById("addSelectedSizeBtn").addEventListener("click", function () {
+            const sizeDropdown = document.getElementById("sizeDropdown");
+            const selectedSizeId = sizeDropdown.value;
+            const selectedSizeName = sizeDropdown.options[sizeDropdown.selectedIndex].text;
+
+            if (!selectedSizeId) {
+                alert("Vui lòng chọn một size!");
+                return;
+            }
+
+            const existingRow = document.querySelector(`#selectedSizeTableBody tr[data-size-id="${selectedSizeId}"]`);
+            if (existingRow) {
+                alert("Size này đã được thêm!");
+                return;
+            }
+
+            const tableBody = document.getElementById("selectedSizeTableBody");
+            const rowIndex = tableBody.rows.length;
+
+            const newRow = document.createElement("tr");
+            newRow.setAttribute("data-size-id", selectedSizeId);
+
+            newRow.innerHTML = `
+                <td>
+                    <input type="hidden" name="Product.Sizes[${rowIndex}].Size_Id" value="${selectedSizeId}" />
+                    ${selectedSizeName}
+                </td>
+                <td>
+                    <input type="number" name="Product.Sizes[${rowIndex}].Stock" class="form-control" placeholder="Nhập số lượng" required />
+                </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-danger btn-sm remove-size-row">Xóa</button>
+                </td>
+            `;
+
+            tableBody.appendChild(newRow);
+            sizeDropdown.value = "";
+        });
+
+        document.getElementById("selectedSizeTableBody").addEventListener("click", function (e) {
+            if (e.target.classList.contains("remove-size-row")) {
+                e.target.closest("tr").remove();
+            }
+        });
+    </script>
+    <partial name="_ValidationScriptsPartial" />
+}

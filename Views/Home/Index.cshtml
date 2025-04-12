@@ -47,7 +47,7 @@
                         <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                             Giá
                         </button>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu" id="priceDropdown">
                             <li><a class="dropdown-item" href="#">Giá: Thấp đến cao</a></li>
                             <li><a class="dropdown-item" href="#">Giá: Cao đến thấp</a></li>
                         </ul>
@@ -76,8 +76,9 @@
                                 <div class="home-product-item__img" style="background-image: url(@product.Images);"></div>
                                 <h4 class="home-product-item__name">@product.Name</h4>
                                 <div class="home-product-item__price">
-                                    <span class="home-product-item__price-old">@product.Price.ToString("N0")đ</span>
-                                    <span class="home-product-item__price-current">999.000đ</span>
+                                    @* home-product-item__price-old *@
+                                    <span class="home-product-item__price-current">@product.Price.ToString("N0")đ</span>
+                                    @* <span class="home-product-item__price-current">999.000đ</span> *@
                                 </div>
                                 <div class="home-product-item__action">
                                     <span class="home-product-item__like">
@@ -155,8 +156,8 @@
                             <div class="home-product-item__img" style="background-image: url(${product.images});"></div>
                             <h4 class="home-product-item__name">${product.name}</h4>
                             <div class="home-product-item__price">
-                                <span class="home-product-item__price-old">${product.price.toLocaleString()}đ</span>
-                                <span class="home-product-item__price-current">999.000đ</span>
+                                <span class="home-product-item__price-current">${product.price.toLocaleString()}đ</span>
+                                @* <span class="home-product-item__price-current">999.000đ</span> *@
                             </div>
                             <div class="home-product-item__action">
                                 <span class="home-product-item__like"><i class="far fa-heart"></i></span>
@@ -222,8 +223,8 @@
                                     <div class="home-product-item__img" style="background-image: url(${product.images});"></div>
                                     <h4 class="home-product-item__name">${product.name}</h4>
                                     <div class="home-product-item__price">
-                                        <span class="home-product-item__price-old">${product.price.toLocaleString()}đ</span>
-                                        <span class="home-product-item__price-current">999.000đ</span>
+                                        <span class="home-product-item__price-current">${product.price.toLocaleString()}đ</span>
+                                        @* <span class="home-product-item__price-current">999.000đ</span> *@
                                     </div>
                                     <div class="home-product-item__action">
                                         <span class="home-product-item__like"><i class="far fa-heart"></i></span>
@@ -257,8 +258,10 @@
     // Load product theo Giá
     document.addEventListener("DOMContentLoaded", function () {
     // Lấy các phần tử trong dropdown "Giá"
-    const priceAscBtn = document.querySelector(".dropdown-menu li:nth-child(1) a");
-    const priceDescBtn = document.querySelector(".dropdown-menu li:nth-child(2) a");
+    const priceAscBtn = document.querySelector("#priceDropdown li:nth-child(1) a");
+    const priceDescBtn = document.querySelector("#priceDropdown li:nth-child(2) a");
+    console.log(priceAscBtn); // Kiểm tra xem phần tử có được chọn không
+    console.log(priceDescBtn);
 
 
     const productContainer = document.querySelector(".home-product .row");
@@ -286,8 +289,8 @@
                                 <div class="home-product-item__img" style="background-image: url(${product.images});"></div>
                                 <h4 class="home-product-item__name">${product.name}</h4>
                                 <div class="home-product-item__price">
-                                    <span class="home-product-item__price-old">${product.price.toLocaleString()}đ</span>
-                                    <span class="home-product-item__price-current">999.000đ</span>
+                                    <span class="home-product-item__price-current">${product.price.toLocaleString()}đ</span>
+                                    @* <span class="home-product-item__price-current">999.000đ</span> *@
                                 </div>
                                 <div class="home-product-item__action">
                                     <span class="home-product-item__like"><i class="far fa-heart"></i></span>
@@ -362,8 +365,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <div class="home-product-item__img" style="background-image: url(${product.images});"></div>
                                 <h4 class="home-product-item__name">${product.name}</h4>
                                 <div class="home-product-item__price">
-                                    <span class="home-product-item__price-old">${product.price.toLocaleString()}đ</span>
-                                    <span class="home-product-item__price-current">999.000đ</span>
+                                    <span class="home-product-item__price-current">${product.price.toLocaleString()}đ</span>
+                                    @* <span class="home-product-item__price-current">999.000đ</span> *@
                                 </div>
                                 <div class="home-product-item__action">
                                     <span class="home-product-item__like"><i class="far fa-heart"></i></span>

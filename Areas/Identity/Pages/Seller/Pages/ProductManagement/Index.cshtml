@@ -1,0 +1,234 @@
+@page "/seller/productmanagement"
+@model BTL_WEBNC.ProductManagement.Sellers.IndexModel
+@{
+    ViewData["Title"] = "Seller - Quản lý sản phẩm";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="d-flex justify-content-between align-items-center mt-3">
+    <h1>Quản lý sản phẩm</h1>
+    <a asp-page="./Create" class="btn btn-success btn-sm">Thêm sản phẩm mới</a>
+</div>
+<div class="card mt-4">
+    <div class="card-header text-white" style="background-image: linear-gradient(0, #fe6433, #f53e2d);">
+        <h5 class="mb-0">Danh sách sản phẩm</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Mô tả</th>
+                        <th>Danh mục</th>
+                        <th>Hình ảnh</th>
+                        <th>Giá</th>
+                        <th>Số lượng</th>
+                        <th>Trạng thái</th>
+                        <th>Trạng thái đăng sản phẩm</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Products != null && Model.Products.Any())
+                    {
+                        int index = 1;
+                        foreach (var product in Model.Products)
+                        {
+                            <tr>
+                                <td>@index</td>
+                                <td>@product.Name</td>
+                                <td>@product.Description</td>
+                                <td>@product.CategoryName</td>
+                                <td>
+                                    <img src="@product.Images" alt="@product.Name" class="img-thumbnail" style="width: 100px; height: auto;" />
+                                </td>
+                                <td>@product.Price.ToString("N0")đ</td>
+                                <td>@product.Stock</td>
+                                <td>
+                                    @if (product.Status == ProductStatus.Active)
+                                    {
+                                        <span class="badge bg-success">Còn hàng</span>
+                                    }
+                                    else if (product.Status == ProductStatus.OutOfStock)
+                                    {
+                                        <span class="badge bg-danger">Hết hàng</span>
+                                    }
+                                    else if (product.Status == ProductStatus.NoActive)
+                                    {
+                                        <span class="badge bg-warning text-dark">Ngừng bán</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (product.ApprovalStatus == ProductApprovalStatus.Approved)
+                                    {
+                                        <span class="badge bg-success">Đã duyệt</span>
+                                    }
+                                    else if (product.ApprovalStatus == ProductApprovalStatus.Pending)
+                                    {
+                                        <span class="badge bg-warning text-dark">Chờ duyệt</span>
+                                    }
+                                    else if (product.ApprovalStatus == ProductApprovalStatus.Rejected)
+                                    {
+                                        <span class="badge bg-danger">Bị từ chối</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a asp-page="./Edit" asp-route-productid="@product.Product_Id" class="btn btn-sm btn-outline-primary">Sửa</a>
+                                        <button type="button" class="btn btn-sm btn-outline-danger delete-btn" data-id="@product.Product_Id" data-bs-toggle="modal" data-bs-target="#deleteModal">Xóa</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            index++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="9" class="text-center text-muted">Không có sản phẩm nào.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal xác nhận xóa -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Xác nhận xóa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc chắn muốn xóa sản phẩm này không?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" id="confirmDeleteBtn" class="btn btn-danger">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    /* Hiệu ứng slide-in từ bên phải */
+    .slide-in {
+        animation: slideIn 0.5s ease-out;
+    }
+
+    @@keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    /* Tùy chỉnh giao diện thông báo */
+    .alert {
+        font-size: 1rem;
+        font-weight: 500;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+</style>
+@section Scripts {
+    <script>
+        // Tự động ẩn thông báo sau 5 giây
+        setTimeout(() => {
+            const successMessage = document.getElementById("successMessage");
+            if (successMessage) {
+                successMessage.classList.remove("slide-in");
+                successMessage.classList.add("fade-out");
+                setTimeout(() => successMessage.remove(), 500); // Xóa phần tử sau khi animation kết thúc
+            }
+        }, 5000);
+
+        let productIdToDelete = null;
+
+        // Lưu ID sản phẩm khi nhấn nút "Xóa"
+        document.querySelectorAll(".delete-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                productIdToDelete = this.getAttribute("data-id");
+                console.log(productIdToDelete);
+            });
+        });
+        console.log(productIdToDelete); // Kiểm tra ID sản phẩm đã lưu
+
+        // Xử lý khi nhấn nút "Xóa" trong modal
+        document.getElementById("confirmDeleteBtn").addEventListener("click", function () {
+            if (!productIdToDelete) {
+                alert("Không tìm thấy ID sản phẩm để xóa.");
+                return;
+            }
+            console.log(productIdToDelete);
+            fetch(`/seller/productmanagement?handler=Delete`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "RequestVerificationToken": document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify({ id: productIdToDelete })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Xóa dòng sản phẩm khỏi bảng
+                    const row = document.querySelector(`button[data-id="${productIdToDelete}"]`).closest("tr");
+                    row.remove();
+
+                    // Hiển thị thông báo thành công
+                    const notification = document.createElement("div");
+                    notification.className = "alert alert-success slide-in position-fixed top-0 end-0 m-3";
+                    notification.style.zIndex = "1050";
+                    notification.innerText = data.message;
+                    document.body.appendChild(notification);
+
+                    // Tự động ẩn thông báo sau 5 giây
+                    setTimeout(() => {
+                        notification.classList.remove("slide-in");
+                        notification.classList.add("fade-out");
+                        setTimeout(() => notification.remove(), 500); // Xóa phần tử sau khi animation kết thúc
+                    }, 5000);
+                } else {
+                    const notification = document.createElement("div");
+                    notification.className = "alert alert-danger slide-in position-fixed top-0 end-0 m-3";
+                    notification.style.zIndex = "1050";
+                    notification.innerText = data.message || "Đã xảy ra lỗi khi xóa sản phẩm.";
+                    document.body.appendChild(notification);
+
+                    // Tự động ẩn thông báo sau 5 giây
+                    setTimeout(() => {
+                        notification.classList.remove("slide-in");
+                        notification.classList.add("fade-out");
+                        setTimeout(() => notification.remove(), 500); // Xóa phần tử sau khi animation kết thúc
+                    }, 5000);
+                }
+
+                // Đóng modal
+                const deleteModal = bootstrap.Modal.getInstance(document.getElementById("deleteModal"));
+                deleteModal.hide();
+            })
+            .catch(error => {
+                console.error("Lỗi khi xóa sản phẩm:", error);
+                alert("Đã xảy ra lỗi khi xóa sản phẩm.");
+            });
+        });
+    </script>
+}
